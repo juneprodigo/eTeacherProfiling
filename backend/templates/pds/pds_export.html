@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CS Form No. 212 - Personal Data Sheet</title>
+<style>
+  @page { size: A4; margin: 1cm; }
+  body { font-family: Arial, sans-serif; font-size: 8pt; color: #000; }
+  h1 { font-size: 12pt; text-align: center; margin: 0; }
+  h2 { font-size: 9pt; background: #d0d0d0; padding: 2px 4px; margin: 6px 0 2px; }
+  .header { text-align: center; border: 2px solid #000; padding: 4px; margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  th, td { border: 1px solid #000; padding: 2px 4px; vertical-align: top; }
+  th { background: #e0e0e0; font-weight: bold; font-size: 7pt; }
+  .label { background: #f0f0f0; font-weight: bold; width: 30%; }
+  .value { width: 70%; }
+  .section-title { background: #003366; color: white; font-weight: bold; padding: 3px 6px; font-size: 8pt; }
+  .warning { font-size: 7pt; color: #900; text-align: center; margin-bottom: 4px; }
+  .yes-no { display: inline-block; width: 40px; text-align: center; border: 1px solid #000; padding: 1px 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="font-size:7pt;">CS Form No. 212 | Revised 2026</div>
+  <h1>PERSONAL DATA SHEET</h1>
+  <div class="warning">WARNING: Any misrepresentation made in the Personal Data Sheet shall cause the filing of administrative/criminal case/s against the person concerned.</div>
+</div>
+
+<!-- SECTION I: PERSONAL INFORMATION -->
+<div class="section-title">I. PERSONAL INFORMATION</div>
+{% if personal_info %}
+<table>
+  <tr><td class="label">1. Surname</td><td class="value">{{ personal_info.surname }}</td>
+      <td class="label">2. First Name</td><td class="value">{{ personal_info.first_name }}</td></tr>
+  <tr><td class="label">Middle Name</td><td class="value">{{ personal_info.middle_name }}</td>
+      <td class="label">Name Extension</td><td class="value">{{ personal_info.name_extension }}</td></tr>
+  <tr><td class="label">3. Date of Birth</td><td class="value">{{ personal_info.date_of_birth|date:"d/m/Y" }}</td>
+      <td class="label">4. Place of Birth</td><td class="value">{{ personal_info.place_of_birth }}</td></tr>
+  <tr><td class="label">5. Sex at Birth</td><td class="value">{{ personal_info.sex_at_birth }}</td>
+      <td class="label">6. Civil Status</td><td class="value">{{ personal_info.civil_status }}</td></tr>
+  <tr><td class="label">7. Height (m)</td><td class="value">{{ personal_info.height_m }}</td>
+      <td class="label">8. Weight (kg)</td><td class="value">{{ personal_info.weight_kg }}</td></tr>
+  <tr><td class="label">9. Blood Type</td><td class="value">{{ personal_info.blood_type }}</td>
+      <td class="label">16. Citizenship</td><td class="value">{% if personal_info.citizenship_filipino %}Filipino{% endif %}{% if personal_info.dual_citizenship %} / Dual: {{ personal_info.dual_citizenship_country }}{% endif %}</td></tr>
+  <tr><td class="label">10. UMID ID No.</td><td class="value">{{ personal_info.umid_id_no }}</td>
+      <td class="label">11. Pag-IBIG ID No.</td><td class="value">{{ personal_info.pag_ibig_id_no }}</td></tr>
+  <tr><td class="label">12. PhilHealth No.</td><td class="value">{{ personal_info.philhealth_no }}</td>
+      <td class="label">13. PhilSys PCN</td><td class="value">{{ personal_info.philsys_pcn }}</td></tr>
+  <tr><td class="label">14. TIN No.</td><td class="value">{{ personal_info.tin_no }}</td>
+      <td class="label">15. Agency Employee No.</td><td class="value">{{ personal_info.agency_employee_no }}</td></tr>
+  <tr><td class="label">17. Residential Address</td>
+      <td class="value" colspan="3">{{ personal_info.res_house_block_lot }}, {{ personal_info.res_street }}, {{ personal_info.res_subdivision_village }}, Brgy. {{ personal_info.res_barangay }}, {{ personal_info.res_city_municipality }}, {{ personal_info.res_province }} {{ personal_info.res_zip_code }}</td></tr>
+  <tr><td class="label">18. Permanent Address</td>
+      <td class="value" colspan="3">{{ personal_info.perm_house_block_lot }}, {{ personal_info.perm_street }}, {{ personal_info.perm_subdivision_village }}, Brgy. {{ personal_info.perm_barangay }}, {{ personal_info.perm_city_municipality }}, {{ personal_info.perm_province }} {{ personal_info.perm_zip_code }}</td></tr>
+  <tr><td class="label">19. Telephone No.</td><td class="value">{{ personal_info.telephone_no }}</td>
+      <td class="label">20. Mobile No.</td><td class="value">{{ personal_info.mobile_no }}</td></tr>
+  <tr><td class="label">21. Email Address</td><td class="value" colspan="3">{{ personal_info.email_address }}</td></tr>
+</table>
+{% else %}<p><em>Personal information not yet filled.</em></p>{% endif %}
+
+<!-- SECTION II: FAMILY BACKGROUND -->
+<div class="section-title">II. FAMILY BACKGROUND</div>
+{% if family_background %}
+<table>
+  <tr><td class="label">22. Spouse's Surname</td><td>{{ family_background.spouse_surname }}</td>
+      <td class="label">First Name</td><td>{{ family_background.spouse_first_name }}</td></tr>
+  <tr><td class="label">Middle Name</td><td>{{ family_background.spouse_middle_name }}</td>
+      <td class="label">Ext.</td><td>{{ family_background.spouse_name_extension }}</td></tr>
+  <tr><td class="label">Occupation</td><td>{{ family_background.spouse_occupation }}</td>
+      <td class="label">Employer/Business</td><td>{{ family_background.spouse_employer_business_name }}</td></tr>
+  <tr><td class="label">Business Address</td><td colspan="3">{{ family_background.spouse_business_address }}</td></tr>
+  <tr><td class="label">Telephone No.</td><td>{{ family_background.spouse_telephone_no }}</td><td colspan="2"></td></tr>
+  <tr><td class="label">23. Children</td>
+      <td colspan="3">{% for child in family_background.children.all %}{{ child.name }} ({{ child.date_of_birth|date:"d/m/Y" }}){% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>
+  <tr><td class="label">24. Father's Surname</td><td>{{ family_background.father_surname }}</td>
+      <td class="label">First Name</td><td>{{ family_background.father_first_name }}</td></tr>
+  <tr><td class="label">Father's Middle Name</td><td>{{ family_background.father_middle_name }}</td>
+      <td class="label">Ext.</td><td>{{ family_background.father_name_extension }}</td></tr>
+  <tr><td class="label">25. Mother's Maiden Surname</td><td>{{ family_background.mother_surname }}</td>
+      <td class="label">First Name</td><td>{{ family_background.mother_first_name }}</td></tr>
+  <tr><td class="label">Mother's Middle Name</td><td colspan="3">{{ family_background.mother_middle_name }}</td></tr>
+</table>
+{% endif %}
+
+<!-- SECTION III: EDUCATIONAL BACKGROUND -->
+<div class="section-title">III. EDUCATIONAL BACKGROUND</div>
+<table>
+  <tr>
+    <th>26. Level</th><th>School Name</th><th>Degree/Course</th>
+    <th>From</th><th>To</th><th>Highest Level/Units</th>
+    <th>Year Graduated</th><th>Honors/Scholarship</th>
+  </tr>
+  {% for edu in educational_backgrounds %}
+  <tr>
+    <td>{{ edu.level }}</td><td>{{ edu.school_name }}</td><td>{{ edu.degree_course }}</td>
+    <td>{{ edu.from_year }}</td><td>{{ edu.to_year }}</td>
+    <td>{{ edu.highest_level_units_earned }}</td>
+    <td>{{ edu.year_graduated }}</td><td>{{ edu.scholarship_academic_honors }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="8"><em>No records.</em></td></tr>{% endfor %}
+</table>
+
+<!-- SECTION IV: CIVIL SERVICE ELIGIBILITY -->
+<div class="section-title">IV. CIVIL SERVICE ELIGIBILITY</div>
+<table>
+  <tr><th>27. Eligibility Type</th><th>Rating</th><th>Exam Date</th><th>Exam Place</th><th>License No.</th><th>Validity</th></tr>
+  {% for cse in civil_service_eligibilities %}
+  <tr>
+    <td>{{ cse.eligibility_type }}</td><td>{{ cse.rating }}</td>
+    <td>{{ cse.examination_date|date:"d/m/Y" }}</td><td>{{ cse.examination_place }}</td>
+    <td>{{ cse.license_number }}</td><td>{{ cse.license_validity_date|date:"d/m/Y" }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="6"><em>No records.</em></td></tr>{% endfor %}
+</table>
+
+<!-- SECTION V: WORK EXPERIENCE -->
+<div class="section-title">V. WORK EXPERIENCE</div>
+<table>
+  <tr><th>28. From</th><th>To</th><th>Position Title</th><th>Department/Company</th><th>Salary</th><th>Grade</th><th>Status</th><th>Gov't</th></tr>
+  {% for we in work_experiences %}
+  <tr>
+    <td>{{ we.from_date|date:"d/m/Y" }}</td>
+    <td>{% if we.to_present %}Present{% else %}{{ we.to_date|date:"d/m/Y" }}{% endif %}</td>
+    <td>{{ we.position_title }}</td><td>{{ we.department_agency_company }}</td>
+    <td>{{ we.monthly_salary }}</td><td>{{ we.salary_grade }}</td>
+    <td>{{ we.appointment_status }}</td>
+    <td>{% if we.is_government_service %}Y{% else %}N{% endif %}</td>
+  </tr>
+  {% empty %}<tr><td colspan="8"><em>No records.</em></td></tr>{% endfor %}
+</table>
+
+<!-- SECTION VI: LEARNING & DEVELOPMENT -->
+<div class="section-title">VI. LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS ATTENDED</div>
+<table>
+  <tr><th>29. Training Title</th><th>From</th><th>To</th><th>Hours</th><th>Type</th><th>Conducted By</th></tr>
+  {% for ld in learning_developments %}
+  <tr>
+    <td>{{ ld.training_title }}</td>
+    <td>{{ ld.from_date|date:"d/m/Y" }}</td><td>{{ ld.to_date|date:"d/m/Y" }}</td>
+    <td>{{ ld.number_of_hours }}</td><td>{{ ld.ld_type }}</td>
+    <td>{{ ld.conducted_sponsored_by }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="6"><em>No records.</em></td></tr>{% endfor %}
+</table>
+
+<!-- SECTION VII: VOLUNTARY WORK -->
+<div class="section-title">VII. VOLUNTARY WORK</div>
+<table>
+  <tr><th>30. Organization Name &amp; Address</th><th>From</th><th>To</th><th>Hours</th><th>Position/Nature of Work</th></tr>
+  {% for vw in voluntary_works %}
+  <tr>
+    <td>{{ vw.organization_name_address }}</td>
+    <td>{{ vw.from_date|date:"d/m/Y" }}</td><td>{{ vw.to_date|date:"d/m/Y" }}</td>
+    <td>{{ vw.number_of_hours }}</td><td>{{ vw.position_nature_of_work }}</td>
+  </tr>
+  {% empty %}<tr><td colspan="5"><em>No records.</em></td></tr>{% endfor %}
+</table>
+
+<!-- SECTION VIII: OTHER INFORMATION -->
+{% if other_information %}
+<div class="section-title">VIII. OTHER INFORMATION</div>
+<table>
+  <tr>
+    <th>31. Special Skills &amp; Hobbies</th>
+    <th>32. Non-Academic Distinctions</th>
+    <th>33. Memberships in Organizations</th>
+  </tr>
+  <tr>
+    <td>{% for s in other_information.special_skills_hobbies %}{{ s }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    <td>{% for d in other_information.non_academic_distinctions %}{{ d }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    <td>{% for m in other_information.organization_memberships %}{{ m }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+  </tr>
+</table>
+{% endif %}
+
+<!-- REFERENCES -->
+<div class="section-title">41. REFERENCES</div>
+<table>
+  <tr><th>Name</th><th>Office/Residential Address</th><th>Contact No./Email</th></tr>
+  {% for ref in references %}
+  <tr><td>{{ ref.name }}</td><td>{{ ref.office_residential_address }}</td><td>{{ ref.contact_no_email }}</td></tr>
+  {% empty %}<tr><td colspan="3"><em>No references.</em></td></tr>{% endfor %}
+</table>
+
+<!-- DECLARATION -->
+{% if pds_declaration %}
+<div class="section-title">42. DECLARATION</div>
+<table>
+  <tr>
+    <td class="label">Government Issued ID</td><td>{{ pds_declaration.government_id_type }}</td>
+    <td class="label">ID/License/Passport No.</td><td>{{ pds_declaration.id_license_passport_no }}</td>
+  </tr>
+  <tr>
+    <td class="label">Date/Place of Issuance</td><td>{{ pds_declaration.date_place_of_issuance }}</td>
+    <td class="label">Date Accomplished</td><td>{{ pds_declaration.date_accomplished|date:"d/m/Y" }}</td>
+  </tr>
+</table>
+{% endif %}
+
+<br>
+<p style="font-size:7pt;text-align:center;">CS FORM 212 (Revised 2026) — Generated by Teacher eProfile System</p>
+
+</body>
+</html>
