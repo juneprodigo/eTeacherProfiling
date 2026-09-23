@@ -14,17 +14,33 @@ from .views import (
     OtherInformationView, GovernmentQuestionsView,
     ReferenceListView, ReferenceDetailView,
     PDSDeclarationView,
+    TrainingLibraryViewSet, VoluntaryWorkLibraryViewSet,
+    WorkExperienceLibraryViewSet, EligibilityLibraryViewSet,
 )
 from .analytics_views import (
     TeacherDemographicsAnalyticsView,
     TrainingMonitoringHubView,
 )
+from .address_views import (
+    RegionListView, ProvinceListView,
+    MunicipalityListView, BarangayListView,
+)
 
 router = DefaultRouter()
 router.register(r'teachers', TeacherViewSet, basename='teacher')
+router.register(r'libraries/trainings', TrainingLibraryViewSet, basename='lib-trainings')
+router.register(r'libraries/voluntary', VoluntaryWorkLibraryViewSet, basename='lib-voluntary')
+router.register(r'libraries/work-experiences', WorkExperienceLibraryViewSet, basename='lib-work-experiences')
+router.register(r'libraries/eligibilities', EligibilityLibraryViewSet, basename='lib-eligibilities')
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    # Cascading Philippine Address Endpoints
+    path('address/regions/', RegionListView.as_view(), name='address-regions'),
+    path('address/provinces/', ProvinceListView.as_view(), name='address-provinces'),
+    path('address/cities/', MunicipalityListView.as_view(), name='address-cities'),
+    path('address/barangays/', BarangayListView.as_view(), name='address-barangays'),
 
     # Analytics & Training Hub
     path('analytics/demographics/', TeacherDemographicsAnalyticsView.as_view(), name='analytics-demographics'),

@@ -7,6 +7,7 @@ from .models import (
     EducationalBackground, CivilServiceEligibility, WorkExperience,
     LearningDevelopment, VoluntaryWork, OtherInformation,
     GovernmentQuestions, Reference, PDSDeclaration,
+    TrainingLibrary, VoluntaryWorkLibrary, WorkExperienceLibrary, EligibilityLibrary,
 )
 from accounts.serializers import UserListSerializer
 
@@ -234,3 +235,30 @@ class PDSSummarySerializer(serializers.ModelSerializer):
         elif obj.signature_image:
             return obj.signature_image.url
         return None
+
+
+# ── Reference Libraries Serializers ──────────────────────────────────────────
+
+class TrainingLibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainingLibrary
+        fields = ['id', 'training_title', 'ld_type', 'default_hours', 'conducted_sponsored_by', 'description', 'is_active', 'created_at']
+
+
+class VoluntaryWorkLibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VoluntaryWorkLibrary
+        fields = ['id', 'organization_name_address', 'position_nature_of_work', 'default_hours', 'is_active', 'created_at']
+
+
+class WorkExperienceLibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkExperienceLibrary
+        fields = ['id', 'position_title', 'department_agency_company', 'salary_grade', 'appointment_status', 'is_government_service', 'is_active', 'created_at']
+
+
+class EligibilityLibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EligibilityLibrary
+        fields = ['id', 'eligibility_type', 'exam_place_hint', 'is_active', 'created_at']
+

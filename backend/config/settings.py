@@ -1,6 +1,6 @@
 """
 Teacher eProfile — Django Settings
-CS Form 212 (Revised 2026) | CVMC
+CS Form 212 (Revised 2026) | CES / DEPED
 """
 
 import os

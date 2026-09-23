@@ -225,24 +225,12 @@
               <input v-model="formPersonal.res_subdivision_village" />
             </div>
           </div>
-          <div class="form-grid-4">
-            <div class="field">
-              <label>Barangay</label>
-              <input v-model="formPersonal.res_barangay" />
-            </div>
-            <div class="field">
-              <label>City/Municipality</label>
-              <input v-model="formPersonal.res_city_municipality" />
-            </div>
-            <div class="field">
-              <label>Province</label>
-              <input v-model="formPersonal.res_province" />
-            </div>
-            <div class="field">
-              <label>ZIP CODE</label>
-              <input v-model="formPersonal.res_zip_code" />
-            </div>
-          </div>
+          <PhilippineAddressSelector
+            v-model:province="formPersonal.res_province"
+            v-model:cityMunicipality="formPersonal.res_city_municipality"
+            v-model:barangay="formPersonal.res_barangay"
+            v-model:zipCode="formPersonal.res_zip_code"
+          />
 
           <div class="address-header-row">
             <h4 class="sub-heading">18. Permanent Address</h4>
@@ -264,24 +252,12 @@
               <input v-model="formPersonal.perm_subdivision_village" />
             </div>
           </div>
-          <div class="form-grid-4">
-            <div class="field">
-              <label>Barangay</label>
-              <input v-model="formPersonal.perm_barangay" />
-            </div>
-            <div class="field">
-              <label>City/Municipality</label>
-              <input v-model="formPersonal.perm_city_municipality" />
-            </div>
-            <div class="field">
-              <label>Province</label>
-              <input v-model="formPersonal.perm_province" />
-            </div>
-            <div class="field">
-              <label>ZIP CODE</label>
-              <input v-model="formPersonal.perm_zip_code" />
-            </div>
-          </div>
+          <PhilippineAddressSelector
+            v-model:province="formPersonal.perm_province"
+            v-model:cityMunicipality="formPersonal.perm_city_municipality"
+            v-model:barangay="formPersonal.perm_barangay"
+            v-model:zipCode="formPersonal.perm_zip_code"
+          />
 
           <h4 class="sub-heading">Contact Information (Items 19–21)</h4>
           <div class="form-grid-3">
@@ -1131,7 +1107,7 @@
             <div class="form-grid-1">
               <div class="field">
                 <label>Office / Agency / Notary Commission Details</label>
-                <input v-model="formDecl.administering_officer_office" placeholder="e.g. Cagayan Valley Medical Center / Commission No. 2026-01" />
+                <input v-model="formDecl.administering_officer_office" placeholder="e.g. CES / DepEd / Commission No. 2026-01" />
               </div>
             </div>
           </div>
@@ -1326,7 +1302,7 @@
             <div class="form-grid-1">
               <div class="field">
                 <label>Office / Agency / Notary Commission Details</label>
-                <input v-model="formDecl.administering_officer_office" placeholder="e.g. Cagayan Valley Medical Center / Commission No. 2026-01" />
+                <input v-model="formDecl.administering_officer_office" placeholder="e.g. CES / DepEd / Commission No. 2026-01" />
               </div>
             </div>
           </div>
@@ -1405,6 +1381,15 @@
           <h3>{{ editingItemId ? 'Edit Civil Service Eligibility' : 'Add Civil Service Eligibility' }}</h3>
           <p class="modal-sub">CSC Form 212 Item 27 — Career Service, RA 1080, PRC Board / Bar</p>
           <form @submit.prevent="submitEligibility">
+            <div class="field library-field">
+              <label>⚡ Select from Eligibility Library (Auto-fill)</label>
+              <select @change="onSelectEligibilityLibrary" class="library-dropdown">
+                <option value="">-- Choose standard civil service eligibility --</option>
+                <option v-for="item in librariesStore.eligibilities" :key="item.id" :value="item.id">
+                  {{ item.eligibility_type }}
+                </option>
+              </select>
+            </div>
             <div class="field">
               <label>Eligibility Type *</label>
               <input v-model="modalEligibility.eligibility_type" required placeholder="e.g. RA 1080 (Teacher's Board), Career Service Professional" />
@@ -1445,6 +1430,15 @@
           <h3>{{ editingItemId ? 'Edit Work Experience' : 'Add Work Experience' }}</h3>
           <p class="modal-sub">CSC Form 212 Item 28 — Start from recent work. DO NOT ABBREVIATE.</p>
           <form @submit.prevent="submitWork">
+            <div class="field library-field">
+              <label>⚡ Select from Work Experience Library (Auto-fill)</label>
+              <select @change="onSelectWorkLibrary" class="library-dropdown">
+                <option value="">-- Choose standard teaching or school position --</option>
+                <option v-for="item in librariesStore.workExperiences" :key="item.id" :value="item.id">
+                  {{ item.position_title }} — {{ item.department_agency_company }} (SG {{ item.salary_grade }})
+                </option>
+              </select>
+            </div>
             <div class="field">
               <label>Position Title * (Write in full)</label>
               <input v-model="modalWork.position_title" required placeholder="e.g. Master Teacher I, Secondary School Teacher II" />
@@ -1511,6 +1505,15 @@
           <h3>{{ editingItemId ? 'Edit L&D Intervention' : 'Add L&D Intervention' }}</h3>
           <p class="modal-sub">CSC Form 212 Item 29 — DO NOT ABBREVIATE sponsoring institutions.</p>
           <form @submit.prevent="submitLD">
+            <div class="field library-field">
+              <label>⚡ Select from Training / L&D Library (Auto-fill)</label>
+              <select @change="onSelectTrainingLibrary" class="library-dropdown">
+                <option value="">-- Choose standard DepEd training program --</option>
+                <option v-for="item in librariesStore.trainings" :key="item.id" :value="item.id">
+                  {{ item.training_title }} ({{ item.ld_type }} • {{ item.default_hours }} hrs)
+                </option>
+              </select>
+            </div>
             <div class="field">
               <label>Title of Training / Seminar * (Write in full)</label>
               <input v-model="modalLD.training_title" required placeholder="e.g. Regional Training on the MATATAG Curriculum for Teachers" />
@@ -1557,6 +1560,15 @@
           <h3>{{ editingItemId ? 'Edit Voluntary Work' : 'Add Voluntary Work' }}</h3>
           <p class="modal-sub">CSC Form 212 Item 30 — Civic, NGO, or Voluntary Organizations</p>
           <form @submit.prevent="submitVoluntary">
+            <div class="field library-field">
+              <label>⚡ Select from Voluntary Work Library (Auto-fill)</label>
+              <select @change="onSelectVoluntaryLibrary" class="library-dropdown">
+                <option value="">-- Choose standard organization / civic role --</option>
+                <option v-for="item in librariesStore.voluntaryWorks" :key="item.id" :value="item.id">
+                  {{ item.organization_name_address }} ({{ item.position_nature_of_work }})
+                </option>
+              </select>
+            </div>
             <div class="field">
               <label>Name &amp; Address of Organization * (Write in full)</label>
               <input v-model="modalVoluntary.organization_name_address" required placeholder="e.g. Philippine Red Cross - City Chapter, Main St." />
@@ -1663,9 +1675,11 @@ import { ref, onMounted, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePDSStore } from '@/stores/pds'
 import { useAuthStore } from '@/stores/auth'
+import { useLibrariesStore } from '@/stores/libraries'
 import PdfPreviewModal from '@/components/PdfPreviewModal.vue'
 import SignaturePadModal from '@/components/SignaturePadModal.vue'
 import UserProfileModal from '@/components/UserProfileModal.vue'
+import PhilippineAddressSelector from '@/components/PhilippineAddressSelector.vue'
 import notify from '@/utils/notify'
 
 const showUserProfileModal = ref(false)
@@ -1673,6 +1687,7 @@ const showUserProfileModal = ref(false)
 const route = useRoute()
 const pdsStore = usePDSStore()
 const authStore = useAuthStore()
+const librariesStore = useLibrariesStore()
 
 const loading = ref(true)
 const pds = ref(null)
@@ -1737,6 +1752,7 @@ const formatDate = (d) => {
 const loadData = async () => {
   loading.value = true
   try {
+    librariesStore.fetchAllLibraries()
     let teacherId = route.params.id
     let data = null
     if (teacherId) {
@@ -1790,10 +1806,60 @@ const copyResidentialToPermanent = () => {
   formPersonal.perm_house_block_lot = formPersonal.res_house_block_lot || ''
   formPersonal.perm_street = formPersonal.res_street || ''
   formPersonal.perm_subdivision_village = formPersonal.res_subdivision_village || ''
-  formPersonal.perm_barangay = formPersonal.res_barangay || ''
-  formPersonal.perm_city_municipality = formPersonal.res_city_municipality || ''
   formPersonal.perm_province = formPersonal.res_province || ''
+  formPersonal.perm_city_municipality = formPersonal.res_city_municipality || ''
+  formPersonal.perm_barangay = formPersonal.res_barangay || ''
   formPersonal.perm_zip_code = formPersonal.res_zip_code || ''
+  notify.success('Copied Residential Address to Permanent Address.')
+}
+
+// Library Select Handlers for Modals
+const onSelectEligibilityLibrary = (e) => {
+  const libId = e.target.value
+  if (!libId) return
+  const item = librariesStore.eligibilities.find(x => x.id == libId)
+  if (item) {
+    modalEligibility.eligibility_type = item.eligibility_type
+    if (item.exam_place_hint) {
+      modalEligibility.examination_place = item.exam_place_hint
+    }
+  }
+}
+
+const onSelectWorkLibrary = (e) => {
+  const libId = e.target.value
+  if (!libId) return
+  const item = librariesStore.workExperiences.find(x => x.id == libId)
+  if (item) {
+    modalWork.position_title = item.position_title
+    modalWork.department_agency_company = item.department_agency_company
+    if (item.salary_grade) modalWork.salary_grade = item.salary_grade
+    if (item.appointment_status) modalWork.appointment_status = item.appointment_status
+    if (item.is_government_service !== undefined) modalWork.is_government_service = item.is_government_service
+  }
+}
+
+const onSelectTrainingLibrary = (e) => {
+  const libId = e.target.value
+  if (!libId) return
+  const item = librariesStore.trainings.find(x => x.id == libId)
+  if (item) {
+    modalLD.training_title = item.training_title
+    if (item.ld_type) modalLD.ld_type = item.ld_type
+    if (item.default_hours) modalLD.number_of_hours = item.default_hours
+    if (item.conducted_sponsored_by) modalLD.conducted_sponsored_by = item.conducted_sponsored_by
+  }
+}
+
+const onSelectVoluntaryLibrary = (e) => {
+  const libId = e.target.value
+  if (!libId) return
+  const item = librariesStore.voluntaryWorks.find(x => x.id == libId)
+  if (item) {
+    modalVoluntary.organization_name_address = item.organization_name_address
+    if (item.position_nature_of_work) modalVoluntary.position_nature_of_work = item.position_nature_of_work
+    if (item.default_hours) modalVoluntary.number_of_hours = item.default_hours
+  }
 }
 
 // Section II: Save Family & Children
@@ -3146,4 +3212,39 @@ onMounted(() => {
 .mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }
 .mt-3 { margin-top: 0.75rem; }
+
+/* Library Dropdown Pickers in Modals */
+.library-field {
+  background: rgba(14, 165, 233, 0.08) !important;
+  border: 1px solid rgba(14, 165, 233, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 0.85rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.library-field label {
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  margin-bottom: 0.4rem !important;
+  display: block;
+}
+
+.library-dropdown {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 6px;
+  color: #f8fafc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.library-dropdown:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+}
 </style>

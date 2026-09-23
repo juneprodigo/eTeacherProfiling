@@ -10,6 +10,7 @@ import UserManagementView from '@/views/UserManagementView.vue'
 import TeacherAnalyticsView from '@/views/TeacherAnalyticsView.vue'
 import SchoolActivitiesView from '@/views/SchoolActivitiesView.vue'
 import AttendanceView from '@/views/AttendanceView.vue'
+import ReferenceLibrariesView from '@/views/ReferenceLibrariesView.vue'
 
 const routes = [
   {
@@ -63,6 +64,12 @@ const routes = [
         name: 'MyProfile',
         component: TeacherDetailView,
         meta: { title: 'My CS Form 212 Profile' }
+      },
+      {
+        path: 'libraries',
+        name: 'ReferenceLibraries',
+        component: ReferenceLibrariesView,
+        meta: { title: 'PDS Reference Libraries', requiresStaff: true }
       },
       {
         path: 'users',

@@ -16,6 +16,7 @@ from .models import (
     EducationalBackground, CivilServiceEligibility, WorkExperience,
     LearningDevelopment, VoluntaryWork, OtherInformation,
     GovernmentQuestions, Reference, PDSDeclaration,
+    TrainingLibrary, VoluntaryWorkLibrary, WorkExperienceLibrary, EligibilityLibrary,
 )
 from .serializers import (
     TeacherListSerializer, TeacherCreateSerializer, TeacherUpdateSerializer,
@@ -25,6 +26,8 @@ from .serializers import (
     VoluntaryWorkSerializer, OtherInformationSerializer,
     GovernmentQuestionsSerializer, ReferenceSerializer,
     PDSDeclarationSerializer, PDSSummarySerializer,
+    TrainingLibrarySerializer, VoluntaryWorkLibrarySerializer,
+    WorkExperienceLibrarySerializer, EligibilityLibrarySerializer,
 )
 from accounts.permissions import IsHROrAdmin, IsOwnerOrHROrAdmin
 from django.contrib.auth import get_user_model
@@ -555,3 +558,39 @@ class PDSDeclarationView(SectionBaseView):
     model_class = PDSDeclaration
     serializer_class = PDSDeclarationSerializer
     related_name = 'pds_declaration'
+
+
+# ── Reference Libraries ViewSets ─────────────────────────────────────────────
+
+class TrainingLibraryViewSet(viewsets.ModelViewSet):
+    queryset = TrainingLibrary.objects.filter(is_active=True)
+    serializer_class = TrainingLibrarySerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    filterset_fields = ['ld_type', 'is_active']
+    search_fields = ['training_title', 'conducted_sponsored_by']
+
+
+class VoluntaryWorkLibraryViewSet(viewsets.ModelViewSet):
+    queryset = VoluntaryWorkLibrary.objects.filter(is_active=True)
+    serializer_class = VoluntaryWorkLibrarySerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    search_fields = ['organization_name_address', 'position_nature_of_work']
+
+
+class WorkExperienceLibraryViewSet(viewsets.ModelViewSet):
+    queryset = WorkExperienceLibrary.objects.filter(is_active=True)
+    serializer_class = WorkExperienceLibrarySerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    search_fields = ['position_title', 'department_agency_company']
+
+
+class EligibilityLibraryViewSet(viewsets.ModelViewSet):
+    queryset = EligibilityLibrary.objects.filter(is_active=True)
+    serializer_class = EligibilityLibrarySerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    search_fields = ['eligibility_type']
+

@@ -491,3 +491,80 @@ class PDSDeclaration(models.Model):
     def __str__(self):
         return f'Declaration — {self.teacher}'
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REFERENCE LIBRARIES (Dropdown Sources)
+# ─────────────────────────────────────────────────────────────────────────────
+
+class TrainingLibrary(models.Model):
+    """Reference library for CSC Item 29 — Learning & Development Interventions."""
+    training_title = models.CharField(max_length=500, unique=True)
+    ld_type = models.CharField(max_length=50, blank=True, default='Technical')
+    default_hours = models.PositiveIntegerField(null=True, blank=True, default=8)
+    conducted_sponsored_by = models.CharField(max_length=500, blank=True, default='')
+    description = models.TextField(blank=True, default='')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'pds_library_training'
+        ordering = ['training_title']
+        verbose_name = 'Training Library'
+
+    def __str__(self):
+        return self.training_title
+
+
+class VoluntaryWorkLibrary(models.Model):
+    """Reference library for CSC Item 30 — Voluntary Work / Organizations."""
+    organization_name_address = models.CharField(max_length=500, unique=True)
+    position_nature_of_work = models.CharField(max_length=500, blank=True, default='')
+    default_hours = models.PositiveIntegerField(null=True, blank=True, default=16)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'pds_library_voluntary'
+        ordering = ['organization_name_address']
+        verbose_name = 'Voluntary Work Library'
+
+    def __str__(self):
+        return self.organization_name_address
+
+
+class WorkExperienceLibrary(models.Model):
+    """Reference library for CSC Item 28 — Positions & Work Experience."""
+    position_title = models.CharField(max_length=300)
+    department_agency_company = models.CharField(max_length=500, blank=True, default='Department of Education')
+    salary_grade = models.CharField(max_length=20, blank=True, default='')
+    appointment_status = models.CharField(max_length=30, blank=True, default='Permanent')
+    is_government_service = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'pds_library_work_experience'
+        ordering = ['position_title']
+        unique_together = ['position_title', 'department_agency_company']
+        verbose_name = 'Work Experience Library'
+
+    def __str__(self):
+        return f'{self.position_title} — {self.department_agency_company}'
+
+
+class EligibilityLibrary(models.Model):
+    """Reference library for CSC Item 27 — Civil Service Eligibilities."""
+    eligibility_type = models.CharField(max_length=500, unique=True)
+    exam_place_hint = models.CharField(max_length=300, blank=True, default='')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'pds_library_eligibility'
+        ordering = ['eligibility_type']
+        verbose_name = 'Eligibility Library'
+
+    def __str__(self):
+        return self.eligibility_type
+
+

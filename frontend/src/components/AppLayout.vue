@@ -41,6 +41,11 @@
           <span>My CS Form 212</span>
         </router-link>
 
+        <router-link v-if="authStore.canManageAll" to="/libraries" class="nav-item">
+          <span class="icon">📚</span>
+          <span>Reference Libraries</span>
+        </router-link>
+
         <router-link v-if="authStore.isAdmin" to="/users" class="nav-item">
           <span class="icon">🛡️</span>
           <span>User & Roles</span>
@@ -77,7 +82,7 @@
           <h2>{{ pageTitle }}</h2>
         </div>
         <div class="header-actions">
-          <span class="school-tag">DepEd / Philippine Civil Service</span>
+          <span class="school-tag">CES / DepEd • CSC Form 212</span>
         </div>
       </header>
 

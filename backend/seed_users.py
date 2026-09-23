@@ -13,7 +13,7 @@ User = get_user_model()
 admin_user, created = User.objects.get_or_create(
     username='admin',
     defaults={
-        'email': 'admin@cvmc.edu.ph',
+        'email': 'admin@ces.deped.gov.ph',
         'first_name': 'System',
         'last_name': 'Administrator',
         'role': 'admin',
@@ -32,7 +32,7 @@ else:
 hr_user, created = User.objects.get_or_create(
     username='hr_officer',
     defaults={
-        'email': 'hr@cvmc.edu.ph',
+        'email': 'hr@ces.deped.gov.ph',
         'first_name': 'Maria',
         'last_name': 'Santos',
         'role': 'hr',
@@ -50,7 +50,7 @@ else:
 teacher_user, created = User.objects.get_or_create(
     username='teacher1',
     defaults={
-        'email': 'teacher1@cvmc.edu.ph',
+        'email': 'teacher1@ces.deped.gov.ph',
         'first_name': 'Juan',
         'last_name': 'Dela Cruz',
         'role': 'teacher',
