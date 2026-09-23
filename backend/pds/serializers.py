@@ -17,10 +17,11 @@ class TeacherListSerializer(serializers.ModelSerializer):
     user = UserListSerializer(read_only=True)
     full_name = serializers.SerializerMethodField()
     photo_url = serializers.SerializerMethodField()
+    signature_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Teacher
-        fields = ['id', 'user', 'full_name', 'employee_id', 'department', 'position', 'pds_complete', 'photo_url', 'created_at']
+        fields = ['id', 'user', 'full_name', 'employee_id', 'department', 'position', 'pds_complete', 'photo_url', 'signature_url', 'created_at']
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -33,17 +34,45 @@ class TeacherListSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.user.profile_photo.url)
         return None
 
+    def get_signature_url(self, obj):
+        request = self.context.get('request')
+        if obj.signature_image and request:
+            return request.build_absolute_uri(obj.signature_image.url)
+        elif obj.signature_image:
+            return obj.signature_image.url
+        return None
+
 
 class TeacherCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = ['employee_id', 'department', 'position', 'photo']
+        fields = ['employee_id', 'department', 'position', 'photo', 'signature_image']
 
 
 class TeacherUpdateSerializer(serializers.ModelSerializer):
+    photo_url = serializers.SerializerMethodField()
+    signature_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Teacher
-        fields = ['employee_id', 'department', 'position', 'photo']
+        fields = ['employee_id', 'department', 'position', 'photo', 'photo_url', 'signature_image', 'signature_url']
+
+    def get_photo_url(self, obj):
+        request = self.context.get('request')
+        if obj.photo and request:
+            return request.build_absolute_uri(obj.photo.url)
+        elif obj.photo:
+            return obj.photo.url
+        return None
+
+    def get_signature_url(self, obj):
+        request = self.context.get('request')
+        if obj.signature_image and request:
+            return request.build_absolute_uri(obj.signature_image.url)
+        elif obj.signature_image:
+            return obj.signature_image.url
+        return None
+
 
 
 # ── Section I: Personal Information ──────────────────────────────────────────
@@ -177,12 +206,13 @@ class PDSSummarySerializer(serializers.ModelSerializer):
     references = ReferenceSerializer(many=True, read_only=True)
     pds_declaration = PDSDeclarationSerializer(read_only=True)
     photo_url = serializers.SerializerMethodField()
+    signature_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Teacher
         fields = [
             'id', 'user', 'employee_id', 'department', 'position',
-            'pds_complete', 'photo_url', 'created_at', 'updated_at',
+            'pds_complete', 'photo_url', 'signature_url', 'created_at', 'updated_at',
             'personal_info', 'family_background', 'educational_backgrounds',
             'civil_service_eligibilities', 'work_experiences',
             'learning_developments', 'voluntary_works', 'other_information',
@@ -195,4 +225,12 @@ class PDSSummarySerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.photo.url)
         if obj.user.profile_photo and request:
             return request.build_absolute_uri(obj.user.profile_photo.url)
+        return None
+
+    def get_signature_url(self, obj):
+        request = self.context.get('request')
+        if obj.signature_image and request:
+            return request.build_absolute_uri(obj.signature_image.url)
+        elif obj.signature_image:
+            return obj.signature_image.url
         return None

@@ -44,6 +44,19 @@ def get_teacher_for_user(request, teacher_pk):
     return None
 
 
+_WEASYPRINT_AVAILABLE = None
+
+def _is_weasyprint_available():
+    global _WEASYPRINT_AVAILABLE
+    if _WEASYPRINT_AVAILABLE is None:
+        try:
+            import weasyprint  # noqa: F401
+            _WEASYPRINT_AVAILABLE = True
+        except Exception:
+            _WEASYPRINT_AVAILABLE = False
+    return _WEASYPRINT_AVAILABLE
+
+
 # ── Teacher ViewSet ───────────────────────────────────────────────────────────
 
 class TeacherViewSet(viewsets.ModelViewSet):
@@ -119,30 +132,216 @@ class TeacherViewSet(viewsets.ModelViewSet):
             if not hasattr(request.user, 'teacher_profile') or request.user.teacher_profile.pk != teacher.pk:
                 return Response({'error': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
 
+        # 1. Children Partitioning (Sheet C1 capacity: 12 rows; overflow to Sheet C7)
+        fb = getattr(teacher, 'family_background', None)
+        all_children = list(fb.children.all()) if fb else []
+        c1_children = all_children[:12]
+        c7_children_overflow = all_children[12:]
+        c1_children_padded = c1_children + [None] * (12 - len(c1_children))
+
+        # 2. Educational Background (Sheet C1 standard: 1 per level; overflow to Sheet C8)
+        all_edus = list(teacher.educational_backgrounds.all())
+        level_map = {
+            'Elementary': None,
+            'Secondary': None,
+            'Vocational/Trade Course': None,
+            'College': None,
+            'Graduate Studies': None,
+        }
+        c8_edus_overflow = []
+        for edu in all_edus:
+            lvl = edu.level
+            if lvl in level_map and level_map[lvl] is None:
+                level_map[lvl] = edu
+            else:
+                c8_edus_overflow.append(edu)
+
+        # 3. Civil Service Eligibility (Sheet C2 capacity: 7 rows; overflow to Sheet C9)
+        all_cses = list(teacher.civil_service_eligibilities.all())
+        c2_cses = all_cses[:7]
+        c9_cses_overflow = all_cses[7:]
+        c2_cses_padded = c2_cses + [None] * (7 - len(c2_cses))
+
+        # 4. Work Experience (Sheet C2 capacity: 26 rows; overflow to Sheet C6)
+        all_wes = list(teacher.work_experiences.all())
+        c2_wes = all_wes[:26]
+        c6_wes_overflow = all_wes[26:]
+        c2_wes_padded = c2_wes + [None] * (26 - len(c2_wes))
+
+        # 5. Learning & Development (Sheet C3 capacity: 19 rows; overflow to Sheet C5)
+        all_lds = list(teacher.learning_developments.all())
+        c3_lds = all_lds[:19]
+        c5_lds_overflow = all_lds[19:]
+        c3_lds_padded = c3_lds + [None] * (19 - len(c3_lds))
+
+        # 6. Voluntary Work (Sheet C3 capacity: 11 rows; overflow to Sheet C10)
+        all_vws = list(teacher.voluntary_works.all())
+        c3_vws = all_vws[:11]
+        c10_vws_overflow = all_vws[11:]
+        c3_vws_padded = c3_vws + [None] * (11 - len(c3_vws))
+
+        # 7. Other Information (Sheet C3 capacity: 7 rows; overflow to Sheet C11)
+        other_info = getattr(teacher, 'other_information', None)
+        skills = other_info.special_skills_hobbies if other_info else []
+        distinctions = other_info.non_academic_distinctions if other_info else []
+        memberships = other_info.organization_memberships if other_info else []
+        max_other_len = max(len(skills), len(distinctions), len(memberships), 7)
+        c3_other_rows = []
+        c11_other_overflow = []
+        for i in range(max_other_len):
+            row = {
+                'skill': skills[i] if i < len(skills) else '',
+                'distinction': distinctions[i] if i < len(distinctions) else '',
+                'membership': memberships[i] if i < len(memberships) else ''
+            }
+            if i < 7:
+                c3_other_rows.append(row)
+            else:
+                if row['skill'] or row['distinction'] or row['membership']:
+                    c11_other_overflow.append(row)
+
+        # 8. References (Sheet C4 capacity: 3 rows)
+        all_refs = list(teacher.references.all())
+        c4_refs_padded = all_refs[:3] + [None] * (3 - len(all_refs[:3]))
+
+        # Flags for extra continuation sheets ("PRINT ONLY THE EXTRA SHEET/S WHERE ADDITIONAL INFORMATION WERE ENTERED THEREIN")
+        has_c7 = len(c7_children_overflow) > 0
+        has_c8 = len(c8_edus_overflow) > 0
+        has_c9 = len(c9_cses_overflow) > 0
+        has_c6 = len(c6_wes_overflow) > 0
+        has_c5 = len(c5_lds_overflow) > 0
+        has_c10 = len(c10_vws_overflow) > 0
+        has_c11 = len(c11_other_overflow) > 0
+        extra_count = sum([has_c5, has_c6, has_c7, has_c8, has_c9, has_c10, has_c11])
+        total_pds_pages = 4 + extra_count
+
+        photo_data_uri = None
+        photo_field = teacher.photo if teacher.photo else (teacher.user.profile_photo if teacher.user.profile_photo else None)
+        if photo_field:
+            try:
+                import base64
+                with open(photo_field.path, 'rb') as pf:
+                    ext = photo_field.name.split('.')[-1].lower()
+                    mime = 'image/jpeg' if ext in ('jpg', 'jpeg') else ('image/png' if ext == 'png' else 'image/jpeg')
+                    b64 = base64.b64encode(pf.read()).decode('utf-8')
+                    photo_data_uri = f'data:{mime};base64,{b64}'
+            except Exception:
+                pass
+
+        signature_data_uri = None
+        if teacher.signature_image:
+            try:
+                import base64
+                with open(teacher.signature_image.path, 'rb') as sf:
+                    ext = teacher.signature_image.name.split('.')[-1].lower()
+                    mime = 'image/png' if ext == 'png' else 'image/jpeg'
+                    b64 = base64.b64encode(sf.read()).decode('utf-8')
+                    signature_data_uri = f'data:{mime};base64,{b64}'
+            except Exception:
+                pass
+
         context = {
             'teacher': teacher,
             'personal_info': getattr(teacher, 'personal_info', None),
-            'family_background': getattr(teacher, 'family_background', None),
-            'educational_backgrounds': teacher.educational_backgrounds.all(),
-            'civil_service_eligibilities': teacher.civil_service_eligibilities.all(),
-            'work_experiences': teacher.work_experiences.all(),
-            'learning_developments': teacher.learning_developments.all(),
-            'voluntary_works': teacher.voluntary_works.all(),
-            'other_information': getattr(teacher, 'other_information', None),
+            'family_background': fb,
+            'c1_children_padded': c1_children_padded,
+            'c7_children_overflow': c7_children_overflow,
+            'has_c7': has_c7,
+            'level_map': level_map,
+            'c8_edus_overflow': c8_edus_overflow,
+            'has_c8': has_c8,
+            'c2_cses_padded': c2_cses_padded,
+            'c9_cses_overflow': c9_cses_overflow,
+            'has_c9': has_c9,
+            'c2_wes_padded': c2_wes_padded,
+            'c6_wes_overflow': c6_wes_overflow,
+            'has_c6': has_c6,
+            'c3_lds_padded': c3_lds_padded,
+            'c5_lds_overflow': c5_lds_overflow,
+            'has_c5': has_c5,
+            'c3_vws_padded': c3_vws_padded,
+            'c10_vws_overflow': c10_vws_overflow,
+            'has_c10': has_c10,
+            'c3_other_rows': c3_other_rows,
+            'c11_other_overflow': c11_other_overflow,
+            'has_c11': has_c11,
             'government_questions': getattr(teacher, 'government_questions', None),
-            'references': teacher.references.all(),
+            'c4_refs_padded': c4_refs_padded,
             'pds_declaration': getattr(teacher, 'pds_declaration', None),
+            'total_pds_pages': total_pds_pages,
+            'photo_data_uri': photo_data_uri,
+            'signature_data_uri': signature_data_uri,
         }
+
+        # 1. Attempt verbatim Excel-based PDF generation (pixel-perfect to CS Form 212 Revised 2026)
+        try:
+            from .excel_exporter import PDSExcelExporter
+            from .excel_to_pdf import convert_workbook_to_pdf
+            exporter = PDSExcelExporter(teacher)
+            wb = exporter.generate()
+            verbatim_pdf = convert_workbook_to_pdf(wb, timeout_sec=20)
+            if verbatim_pdf:
+                name = teacher.user.get_full_name().replace(',', '').replace(' ', '_').strip()
+                if not name:
+                    name = teacher.employee_id or f'teacher_{teacher.pk}'
+                response = HttpResponse(verbatim_pdf, content_type='application/pdf')
+                response['Content-Disposition'] = f'inline; filename="PDS_{name}.pdf"'
+                response['Access-Control-Expose-Headers'] = 'Content-Disposition'
+                return response
+        except Exception as ex:
+            print("Verbatim Excel PDF export skipped, falling back to HTML renderer:", ex)
+
+        # 2. Resilient fallback: HTML template renderer (xhtml2pdf / WeasyPrint)
         html_string = render_to_string('pds/pds_export.html', context)
         try:
-            import weasyprint
-            pdf = weasyprint.HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
-            response = HttpResponse(pdf, content_type='application/pdf')
-            name = teacher.user.get_full_name().replace(',', '').replace(' ', '_')
-            response['Content-Disposition'] = f'attachment; filename="PDS_{name}.pdf"'
+            pdf_data = None
+            if _is_weasyprint_available():
+                try:
+                    import weasyprint
+                    pdf_data = weasyprint.HTML(string=html_string, base_url=request.build_absolute_uri('/')).write_pdf()
+                except Exception:
+                    pass
+
+            if pdf_data is None:
+                from xhtml2pdf import pisa
+                import io
+                pdf_buffer = io.BytesIO()
+                pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
+                if pisa_status.err:
+                    return Response({'error': 'PDF rendering error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                pdf_data = pdf_buffer.getvalue()
+
+            response = HttpResponse(pdf_data, content_type='application/pdf')
+            name = teacher.user.get_full_name().replace(',', '').replace(' ', '_').strip()
+            if not name:
+                name = teacher.employee_id or f'teacher_{teacher.pk}'
+            response['Content-Disposition'] = f'inline; filename="PDS_{name}.pdf"'
+            response['Access-Control-Expose-Headers'] = 'Content-Disposition'
             return response
         except Exception as e:
             return Response({'error': f'PDF generation failed: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=True, methods=['get'], url_path='export-excel')
+    def export_excel(self, request, pk=None):
+        """Generates and downloads the official CS Form 212 Revised 2026 Excel spreadsheet with all teacher data."""
+        teacher = self.get_object()
+        from .excel_exporter import PDSExcelExporter
+        try:
+            exporter = PDSExcelExporter(teacher)
+            stream = exporter.save_to_stream()
+            last_name = (teacher.user.last_name if teacher.user else 'Teacher') or 'Teacher'
+            first_name = (teacher.user.first_name if teacher.user else '') or ''
+            filename = f"CS_Form_212_Revised_2026_{last_name}_{first_name}.xlsx".replace(" ", "_")
+
+            response = HttpResponse(
+                stream.getvalue(),
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            response['Access-Control-Expose-Headers'] = 'Content-Disposition'
+            return response
+        except Exception as e:
+            return Response({'error': f'Excel export failed: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # ── Section ViewBase ─────────────────────────────────────────────────────────

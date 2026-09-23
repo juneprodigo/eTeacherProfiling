@@ -15,12 +15,20 @@ from .views import (
     ReferenceListView, ReferenceDetailView,
     PDSDeclarationView,
 )
+from .analytics_views import (
+    TeacherDemographicsAnalyticsView,
+    TrainingMonitoringHubView,
+)
 
 router = DefaultRouter()
 router.register(r'teachers', TeacherViewSet, basename='teacher')
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    # Analytics & Training Hub
+    path('analytics/demographics/', TeacherDemographicsAnalyticsView.as_view(), name='analytics-demographics'),
+    path('analytics/trainings/', TrainingMonitoringHubView.as_view(), name='analytics-trainings'),
 
     # Section I — Personal Information
     path('teachers/<int:teacher_pk>/personal-info/', PersonalInfoView.as_view(), name='personal-info'),

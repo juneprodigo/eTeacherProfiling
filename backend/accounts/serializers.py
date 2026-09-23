@@ -54,6 +54,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     profile_photo_url = serializers.SerializerMethodField()
+    employee_id = serializers.SerializerMethodField()
+    department = serializers.SerializerMethodField()
+    position = serializers.SerializerMethodField()
+    teacher_id = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -61,6 +65,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'first_name', 'last_name',
             'full_name', 'role', 'role_display', 'profile_photo',
             'profile_photo_url', 'is_active', 'date_joined', 'last_login',
+            'employee_id', 'department', 'position', 'teacher_id',
         ]
         read_only_fields = ['date_joined', 'last_login']
 
@@ -72,6 +77,18 @@ class UserDetailSerializer(serializers.ModelSerializer):
         if obj.profile_photo and request:
             return request.build_absolute_uri(obj.profile_photo.url)
         return None
+
+    def get_employee_id(self, obj):
+        return getattr(getattr(obj, 'teacher_profile', None), 'employee_id', '')
+
+    def get_department(self, obj):
+        return getattr(getattr(obj, 'teacher_profile', None), 'department', '')
+
+    def get_position(self, obj):
+        return getattr(getattr(obj, 'teacher_profile', None), 'position', '')
+
+    def get_teacher_id(self, obj):
+        return getattr(getattr(obj, 'teacher_profile', None), 'id', None)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -99,12 +116,41 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    employee_id = serializers.CharField(required=False, allow_blank=True)
+    department = serializers.CharField(required=False, allow_blank=True)
+    position = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = User
         fields = [
             'email', 'first_name', 'last_name', 'role',
             'profile_photo', 'is_active',
+            'employee_id', 'department', 'position',
         ]
+
+    def update(self, instance, validated_data):
+        emp_id = validated_data.pop('employee_id', None)
+        dept = validated_data.pop('department', None)
+        pos = validated_data.pop('position', None)
+
+        user = super().update(instance, validated_data)
+
+        # Sync linked Teacher profile if present
+        teacher = getattr(user, 'teacher_profile', None)
+        if teacher:
+            updated = False
+            if emp_id is not None:
+                teacher.employee_id = emp_id
+                updated = True
+            if dept is not None:
+                teacher.department = dept
+                updated = True
+            if pos is not None:
+                teacher.position = pos
+                updated = True
+            if updated:
+                teacher.save()
+        return user
 
 
 class ChangePasswordSerializer(serializers.Serializer):

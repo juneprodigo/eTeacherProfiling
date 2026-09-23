@@ -22,6 +22,7 @@ class Teacher(models.Model):
     position = models.CharField(max_length=200, blank=True, default='')
     pds_complete = models.BooleanField(default=False)
     photo = models.ImageField(upload_to='teacher_photos/', null=True, blank=True)
+    signature_image = models.ImageField(upload_to='teacher_signatures/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -471,6 +472,16 @@ class PDSDeclaration(models.Model):
     date_place_of_issuance = models.CharField(max_length=200, blank=True, default='')
     date_accomplished = models.DateField(null=True, blank=True)
 
+    # Oath, Jurat & Administering Details (Sheet C4 Rows 67-70)
+    administering_officer_name = models.CharField(max_length=255, blank=True, default='', verbose_name='Person Administering Oath')
+    administering_officer_title = models.CharField(max_length=255, blank=True, default='', verbose_name='Designation / Position')
+    administering_officer_office = models.CharField(max_length=255, blank=True, default='', verbose_name='Office / Agency / Notary Details')
+    subscribed_date = models.CharField(max_length=150, blank=True, default='', verbose_name='Subscribed & Sworn Date / Place')
+
+    # Signature & Thumbmark
+    signature_type = models.CharField(max_length=100, blank=True, default='e-signature/digital certificate')
+    has_thumbmark = models.BooleanField(default=False, help_text='Affixed right thumbmark if unable to sign')
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -479,3 +490,4 @@ class PDSDeclaration(models.Model):
 
     def __str__(self):
         return f'Declaration — {self.teacher}'
+

@@ -4,32 +4,39 @@
   --font-heading: 'Plus Jakarta Sans', sans-serif;
   --font-body: 'Inter', sans-serif;
 
-  /* Educational Royal Navy & Academic Gold Palette */
-  --bg-main: #0b1329;
-  --bg-surface: #131f3d;
-  --bg-surface-elevated: #1a2950;
-  --bg-card: rgba(19, 31, 61, 0.75);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-focus: #f59e0b;
+  /* #fecb90 Warm Apricot Peach Palette */
+  --bg-main: #18110b;
+  --bg-surface: #241a12;
+  --bg-surface-elevated: #35261c;
+  --bg-card: rgba(36, 26, 18, 0.85);
+  --border-color: rgba(254, 203, 144, 0.16);
+  --border-focus: #fecb90;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #fffdfa;
+  --text-secondary: #fde7cc;
+  --text-muted: #bfa189;
+  --text-on-accent: #26150a;
 
-  --accent-gold: #f59e0b;
-  --accent-gold-hover: #d97706;
-  --accent-gold-subtle: rgba(245, 158, 11, 0.15);
+  /* Primary Accent: #fecb90 */
+  --accent-gold: #fecb90;
+  --accent-gold-hover: #f8b668;
+  --accent-gold-subtle: rgba(254, 203, 144, 0.18);
 
-  --accent-blue: #3b82f6;
-  --accent-blue-hover: #2563eb;
+  --accent-peach: #fecb90;
+  --accent-peach-light: #fff0dd;
+  --accent-crust: #e59f58;
+  --accent-crust-dark: #b8702c;
+
+  --accent-blue: #fecb90;
+  --accent-blue-hover: #f8b668;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
 
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
-  --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --glass-backdrop: blur(12px);
+  --shadow-card: 0 10px 36px 0 rgba(0, 0, 0, 0.48);
+  --glass-backdrop: blur(14px);
 }
 
 * {
@@ -46,8 +53,9 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.07) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(254, 203, 144, 0.18) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(229, 159, 88, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 30%, rgba(254, 203, 144, 0.08) 0px, transparent 65%);
   background-attachment: fixed;
 }
 
@@ -67,7 +75,7 @@ button {
 
 input, select, textarea {
   font-family: var(--font-body);
-  background-color: rgba(11, 19, 41, 0.6);
+  background-color: rgba(24, 17, 11, 0.72);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   border-radius: var(--radius-sm);
@@ -80,7 +88,7 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 3px rgba(254, 203, 144, 0.28);
 }
 
 input::placeholder, textarea::placeholder {
@@ -122,3 +130,106 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-gold-subtle);
 }
+
+/* ========================================================================= */
+/* SweetAlert2 Peach Cobbler Theme Styling */
+/* ========================================================================= */
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+.swal2-custom-popup {
+  background: rgba(29, 21, 14, 0.96) !important;
+  border: 1px solid rgba(254, 203, 144, 0.35) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(254, 203, 144, 0.15) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 1.75rem !important;
+}
+
+.swal2-custom-title {
+  color: #fecb90 !important;
+  font-family: var(--font-heading) !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.swal2-custom-html {
+  color: #fde7cc !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5 !important;
+}
+
+.swal2-custom-confirm {
+  background: linear-gradient(135deg, #fecb90, #f8b668) !important;
+  color: #26150a !important;
+  border: none !important;
+  padding: 0.65rem 1.6rem !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  font-family: var(--font-body) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.35) !important;
+  margin: 0.35rem !important;
+}
+
+.swal2-custom-confirm:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(254, 203, 144, 0.45) !important;
+  opacity: 0.95 !important;
+}
+
+.swal2-custom-cancel {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fde7cc !important;
+  border: 1px solid rgba(254, 203, 144, 0.25) !important;
+  padding: 0.65rem 1.4rem !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 0.35rem !important;
+}
+
+.swal2-custom-cancel:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #fff !important;
+}
+
+/* SweetAlert2 Toast */
+.swal2-custom-toast {
+  background: rgba(29, 21, 14, 0.96) !important;
+  border: 1px solid rgba(254, 203, 144, 0.35) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  padding: 0.75rem 1.25rem !important;
+}
+
+.swal2-custom-toast-title {
+  color: #fffdfa !important;
+  font-size: 0.9rem !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+}
+
+.swal2-timer-progress-bar {
+  background: #fecb90 !important;
+}
+
+.swal2-icon.swal2-success {
+  border-color: #fecb90 !important;
+  color: #fecb90 !important;
+}
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: #fecb90 !important;
+}
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(254, 203, 144, 0.4) !important;
+}
+

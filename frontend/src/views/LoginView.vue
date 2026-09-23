@@ -140,18 +140,18 @@ const fill = (u, p) => {
 .btn-primary {
   width: 100%;
   background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-hover));
-  color: #0b1329;
+  color: var(--text-on-accent, #26150a);
   font-weight: 700;
   font-size: 0.95rem;
   padding: 0.75rem;
   border-radius: var(--radius-sm);
   margin-top: 0.75rem;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 6px 20px rgba(254, 203, 144, 0.5);
 }
 
 .btn-primary:disabled {
@@ -191,6 +191,6 @@ const fill = (u, p) => {
 
 .creds-tags span:hover {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
 }
 </style>

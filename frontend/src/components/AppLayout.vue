@@ -21,6 +21,21 @@
           <span>Teachers Directory</span>
         </router-link>
 
+        <router-link to="/activities" class="nav-item">
+          <span class="icon">📅</span>
+          <span>School Activities</span>
+        </router-link>
+
+        <router-link v-if="authStore.canManageAll" to="/analytics" class="nav-item">
+          <span class="icon">📈</span>
+          <span>Teacher's Analytics</span>
+        </router-link>
+
+        <router-link to="/attendance" class="nav-item">
+          <span class="icon">⏱️</span>
+          <span>Time & Attendance</span>
+        </router-link>
+
         <router-link v-if="authStore.isTeacher" :to="myProfileRoute" class="nav-item">
           <span class="icon">📝</span>
           <span>My CS Form 212</span>
@@ -33,16 +48,25 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-summary">
-          <div class="avatar">{{ initials }}</div>
+        <div class="user-summary" @click="showProfileModal = true" role="button" tabindex="0" title="Click to edit profile">
+          <div class="avatar">
+            <img v-if="authStore.user?.profile_photo_url" :src="authStore.user.profile_photo_url" class="avatar-photo" />
+            <span v-else>{{ initials }}</span>
+          </div>
           <div class="user-details">
             <p class="user-name">{{ authStore.fullName }}</p>
             <p class="user-email">{{ authStore.user?.email }}</p>
           </div>
+          <span class="user-edit-hint" title="Edit Profile">✏️</span>
         </div>
-        <button @click="logout" class="btn-logout" title="Sign Out">
-          🚪 Logout
-        </button>
+        <div class="footer-btn-group">
+          <button @click="showProfileModal = true" class="btn-profile-edit" title="Edit Profile Details">
+            ⚙️ Edit Profile
+          </button>
+          <button @click="logout" class="btn-logout" title="Sign Out">
+            🚪 Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -61,17 +85,26 @@
         <router-view />
       </div>
     </main>
+
+    <!-- Global User Profile Edit Modal -->
+    <UserProfileModal
+      :isOpen="showProfileModal"
+      @close="showProfileModal = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import UserProfileModal from '@/components/UserProfileModal.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+
+const showProfileModal = ref(false)
 
 const myProfileRoute = computed(() => {
   return '/profile'
@@ -108,7 +141,7 @@ const logout = () => {
   border-top: none;
   border-bottom: none;
   padding: 1.5rem 1rem;
-  background: rgba(13, 22, 45, 0.95);
+  background: rgba(26, 18, 12, 0.96);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -168,9 +201,10 @@ const logout = () => {
 }
 
 .nav-item.router-link-active {
-  background: var(--accent-gold);
-  color: #0b1329;
+  background: linear-gradient(135deg, #fecb90, #f8b668);
+  color: #26150a;
   font-weight: 700;
+  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.35);
 }
 
 .sidebar-footer {
@@ -182,7 +216,27 @@ const logout = () => {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.user-summary:hover {
+  background: rgba(254, 203, 144, 0.08);
+}
+
+.user-edit-hint {
+  margin-left: auto;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.user-summary:hover .user-edit-hint {
+  opacity: 1;
 }
 
 .avatar {
@@ -196,10 +250,19 @@ const logout = () => {
   justify-content: center;
   font-weight: 700;
   color: var(--accent-gold);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-details {
   overflow: hidden;
+  flex: 1;
 }
 
 .user-name {
@@ -218,15 +281,40 @@ const logout = () => {
   text-overflow: ellipsis;
 }
 
+.footer-btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-profile-edit {
+  flex: 1;
+  background: rgba(254, 203, 144, 0.12);
+  color: #fecb90;
+  border: 1px solid rgba(254, 203, 144, 0.3);
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-profile-edit:hover {
+  background: rgba(254, 203, 144, 0.24);
+  border-color: #fecb90;
+}
+
 .btn-logout {
-  width: 100%;
   background: rgba(244, 63, 94, 0.15);
   color: #fda4af;
   border: 1px solid rgba(244, 63, 94, 0.3);
-  padding: 0.5rem;
+  padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn-logout:hover {

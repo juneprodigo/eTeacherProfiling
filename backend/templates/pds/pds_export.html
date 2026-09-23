@@ -1,205 +1,1143 @@
+{% load pds_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CS Form No. 212 - Personal Data Sheet</title>
+<title>CS Form No. 212 (Revised 2026) - Personal Data Sheet</title>
 <style>
-  @page { size: A4; margin: 1cm; }
-  body { font-family: Arial, sans-serif; font-size: 8pt; color: #000; }
-  h1 { font-size: 12pt; text-align: center; margin: 0; }
-  h2 { font-size: 9pt; background: #d0d0d0; padding: 2px 4px; margin: 6px 0 2px; }
-  .header { text-align: center; border: 2px solid #000; padding: 4px; margin-bottom: 6px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
-  th, td { border: 1px solid #000; padding: 2px 4px; vertical-align: top; }
-  th { background: #e0e0e0; font-weight: bold; font-size: 7pt; }
-  .label { background: #f0f0f0; font-weight: bold; width: 30%; }
-  .value { width: 70%; }
-  .section-title { background: #003366; color: white; font-weight: bold; padding: 3px 6px; font-size: 8pt; }
-  .warning { font-size: 7pt; color: #900; text-align: center; margin-bottom: 4px; }
-  .yes-no { display: inline-block; width: 40px; text-align: center; border: 1px solid #000; padding: 1px 4px; }
+  @page {
+    size: A4 portrait;
+    margin: 0.8cm 0.8cm 0.8cm 0.8cm;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 7.5pt;
+    color: #000;
+    line-height: 1.15;
+  }
+  .page-container {
+    page-break-after: always;
+    width: 100%;
+  }
+  .page-container:last-child {
+    page-break-after: avoid;
+  }
+  .header-box {
+    border: 1.5px solid #000;
+    padding: 3px 6px;
+    margin-bottom: 3px;
+    text-align: center;
+  }
+  .form-number {
+    font-size: 6.5pt;
+    font-style: italic;
+    text-align: left;
+    margin-bottom: 2px;
+  }
+  h1 {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 2px 0;
+    letter-spacing: 0.5px;
+  }
+  .warning-box {
+    font-size: 6.5pt;
+    color: #900;
+    font-style: italic;
+    border-top: 1px solid #000;
+    padding-top: 2px;
+    margin-top: 2px;
+  }
+  .section-banner {
+    background-color: #969696;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 2px 4px;
+    margin-top: 3px;
+    border: 1px solid #000;
+  }
+  .continuation-banner {
+    background-color: #555555;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 8.5pt;
+    text-align: center;
+    padding: 3px;
+    margin-bottom: 4px;
+    border: 1px solid #000;
+  }
+  table.pds-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 3px;
+  }
+  table.pds-table th, table.pds-table td {
+    border: 1px solid #000;
+    padding: 1.5px 3px;
+    vertical-align: top;
+  }
+  table.pds-table th {
+    background-color: #eaeaea;
+    font-weight: bold;
+    font-size: 6.8pt;
+    text-align: center;
+  }
+  td.lbl {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    width: 18%;
+    font-size: 7pt;
+  }
+  td.val {
+    background-color: #ffffff;
+    font-size: 7.2pt;
+  }
+  .footer-row {
+    margin-top: 4px;
+    border-top: 1px solid #000;
+    padding-top: 2px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+  }
+  .sig-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+  .sig-table td {
+    border: 1px solid #000;
+    padding: 2px 4px;
+    font-size: 6.8pt;
+  }
+  .sub-note {
+    font-size: 6.2pt;
+    font-style: italic;
+    color: #444;
+  }
+  .photo-box {
+    width: 3.5cm;
+    height: 4.5cm;
+    border: 1px solid #000;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 6.5pt;
+    background-color: #fafafa;
+    display: inline-block;
+  }
+  .thumb-box {
+    width: 3.5cm;
+    height: 3.5cm;
+    border: 1px solid #000;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 6.5pt;
+    background-color: #fafafa;
+    display: inline-block;
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div style="font-size:7pt;">CS Form No. 212 | Revised 2026</div>
-  <h1>PERSONAL DATA SHEET</h1>
-  <div class="warning">WARNING: Any misrepresentation made in the Personal Data Sheet shall cause the filing of administrative/criminal case/s against the person concerned.</div>
+<!-- =========================================================================== -->
+<!-- SHEET C1: PAGE 1 OF 4 (Personal Info, Family Background, Education) -->
+<!-- =========================================================================== -->
+<div class="page-container">
+  <div class="header-box">
+    <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+    <h1>PERSONAL DATA SHEET</h1>
+    <div class="warning-box">
+      WARNING: Any misrepresentation made in the Personal Data Sheet and the Work Experience Sheet shall cause the filing of administrative/criminal case/s against the person concerned.
+    </div>
+  </div>
+
+  <!-- SECTION I: PERSONAL INFORMATION -->
+  <div class="section-banner">I. PERSONAL INFORMATION</div>
+  <table class="pds-table">
+    <tr>
+      <td class="lbl" style="width: 18%;">1. SURNAME</td>
+      <td class="val" colspan="3"><strong>{{ personal_info.surname|na }}</strong></td>
+    </tr>
+    <tr>
+      <td class="lbl">2. FIRST NAME</td>
+      <td class="val" style="width: 42%;"><strong>{{ personal_info.first_name|na }}</strong></td>
+      <td class="lbl" style="width: 18%;">NAME EXTENSION (JR., SR)</td>
+      <td class="val" style="width: 22%;">{{ personal_info.name_extension|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">MIDDLE NAME</td>
+      <td class="val" colspan="3">{{ personal_info.middle_name|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">3. DATE OF BIRTH (dd/mm/yyyy)</td>
+      <td class="val">{{ personal_info.date_of_birth|pds_date }}</td>
+      <td class="lbl" rowspan="2">16. CITIZENSHIP</td>
+      <td class="val" rowspan="2">
+        {% if personal_info.citizenship_filipino %}[X] Filipino{% else %}[ ] Filipino{% endif %}<br>
+        {% if personal_info.dual_citizenship %}
+          [X] Dual Citizenship ({% if personal_info.dual_citizenship_by_birth %}by birth{% else %}by naturalization{% endif %})<br>
+          Country: {{ personal_info.dual_citizenship_country|na }}
+        {% else %}
+          [ ] Dual Citizenship
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">4. PLACE OF BIRTH</td>
+      <td class="val">{{ personal_info.place_of_birth|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">5. SEX AT BIRTH</td>
+      <td class="val">{{ personal_info.sex_at_birth|na }}</td>
+      <td class="lbl" rowspan="3">17. RESIDENTIAL ADDRESS</td>
+      <td class="val" rowspan="3">
+        House/Block/Lot: {{ personal_info.res_house_block_lot|na }}, Street: {{ personal_info.res_street|na }}<br>
+        Subd: {{ personal_info.res_subdivision_village|na }}, Brgy: {{ personal_info.res_barangay|na }}<br>
+        City: {{ personal_info.res_city_municipality|na }}, Prov: {{ personal_info.res_province|na }}<br>
+        ZIP CODE: {{ personal_info.res_zip_code|na }}
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">6. CIVIL STATUS</td>
+      <td class="val">
+        {{ personal_info.civil_status|na }}
+        {% if personal_info.civil_status == 'Others' and personal_info.civil_status_others %} ({{ personal_info.civil_status_others }}){% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">7. HEIGHT (m) / 8. WEIGHT (kg)</td>
+      <td class="val">Height: {{ personal_info.height_m|na }} m | Weight: {{ personal_info.weight_kg|na }} kg</td>
+    </tr>
+    <tr>
+      <td class="lbl">9. BLOOD TYPE</td>
+      <td class="val">{{ personal_info.blood_type|na }}</td>
+      <td class="lbl" rowspan="3">18. PERMANENT ADDRESS</td>
+      <td class="val" rowspan="3">
+        House/Block/Lot: {{ personal_info.perm_house_block_lot|na }}, Street: {{ personal_info.perm_street|na }}<br>
+        Subd: {{ personal_info.perm_subdivision_village|na }}, Brgy: {{ personal_info.perm_barangay|na }}<br>
+        City: {{ personal_info.perm_city_municipality|na }}, Prov: {{ personal_info.perm_province|na }}<br>
+        ZIP CODE: {{ personal_info.perm_zip_code|na }}
+      </td>
+    </tr>
+    <tr>
+      <td class="lbl">10. UMID ID NO.</td>
+      <td class="val">{{ personal_info.umid_id_no|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">11. PAG-IBIG ID NO.</td>
+      <td class="val">{{ personal_info.pag_ibig_id_no|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">12. PHILHEALTH NO.</td>
+      <td class="val">{{ personal_info.philhealth_no|na }}</td>
+      <td class="lbl">19. TELEPHONE NO.</td>
+      <td class="val">{{ personal_info.telephone_no|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">13. PhilSys Card (PCN)</td>
+      <td class="val">{{ personal_info.philsys_pcn|na }}</td>
+      <td class="lbl">20. MOBILE NO.</td>
+      <td class="val">{{ personal_info.mobile_no|na }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">14. TIN NO. / 15. AGENCY EMP NO.</td>
+      <td class="val">TIN: {{ personal_info.tin_no|na }} | Emp No: {{ personal_info.agency_employee_no|na }}</td>
+      <td class="lbl">21. E-MAIL ADDRESS</td>
+      <td class="val">{{ personal_info.email_address|na }}</td>
+    </tr>
+  </table>
+
+  <!-- SECTION II: FAMILY BACKGROUND -->
+  <div class="section-banner">II. FAMILY BACKGROUND</div>
+  <table class="pds-table">
+    <tr>
+      <td style="width: 50%; vertical-align: top; padding: 0;">
+        <table class="pds-table" style="margin: 0; border: none;">
+          <tr>
+            <td class="lbl" style="width: 38%;">22. SPOUSE'S SURNAME</td>
+            <td class="val">{{ family_background.spouse_surname|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">FIRST NAME</td>
+            <td class="val">{{ family_background.spouse_first_name|na }} (Ext: {{ family_background.spouse_name_extension|na }})</td>
+          </tr>
+          <tr>
+            <td class="lbl">MIDDLE NAME</td>
+            <td class="val">{{ family_background.spouse_middle_name|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">OCCUPATION</td>
+            <td class="val">{{ family_background.spouse_occupation|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">EMPLOYER/BUSINESS</td>
+            <td class="val">{{ family_background.spouse_employer_business_name|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">BUSINESS ADDRESS</td>
+            <td class="val">{{ family_background.spouse_business_address|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">TELEPHONE NO.</td>
+            <td class="val">{{ family_background.spouse_telephone_no|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">24. FATHER'S SURNAME</td>
+            <td class="val">{{ family_background.father_surname|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">FIRST NAME</td>
+            <td class="val">{{ family_background.father_first_name|na }} (Ext: {{ family_background.father_name_extension|na }})</td>
+          </tr>
+          <tr>
+            <td class="lbl">MIDDLE NAME</td>
+            <td class="val">{{ family_background.father_middle_name|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">25. MOTHER'S MAIDEN SURNAME</td>
+            <td class="val">{{ family_background.mother_surname|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">FIRST NAME</td>
+            <td class="val">{{ family_background.mother_first_name|na }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">MIDDLE NAME</td>
+            <td class="val">{{ family_background.mother_middle_name|na }}</td>
+          </tr>
+        </table>
+      </td>
+
+      <!-- Children Column (Capacity: 12) -->
+      <td style="width: 50%; vertical-align: top; padding: 0;">
+        <table class="pds-table" style="margin: 0; border: none;">
+          <tr>
+            <th style="width: 65%;">23. NAME of CHILDREN (Write full name)</th>
+            <th style="width: 35%;">DATE OF BIRTH (dd/mm/yyyy)</th>
+          </tr>
+          {% for ch in c1_children_padded %}
+          <tr>
+            <td style="height: 14px;">{{ ch.name|na }}</td>
+            <td style="text-align: center;">{{ ch.date_of_birth|pds_date }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="2" class="sub-note" style="text-align: center; background: #fafafa;">
+              {% if has_c7 %}(Continued on sheet C7){% else %}(Continue on sheet C7 if necessary){% endif %}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- SECTION III: EDUCATIONAL BACKGROUND -->
+  <div class="section-banner">III. EDUCATIONAL BACKGROUND</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 14%;">26. LEVEL</th>
+        <th rowspan="2" style="width: 26%;">NAME OF SCHOOL<br>(Write in full)</th>
+        <th rowspan="2" style="width: 22%;">BASIC EDUCATION / DEGREE / COURSE<br>(Write in full)</th>
+        <th colspan="2" style="width: 12%;">PERIOD OF ATTENDANCE</th>
+        <th rowspan="2" style="width: 9%;">HIGHEST LEVEL / UNITS</th>
+        <th rowspan="2" style="width: 7%;">YEAR GRAD.</th>
+        <th rowspan="2" style="width: 10%;">SCHOLARSHIP / HONORS</th>
+      </tr>
+      <tr>
+        <th style="width: 6%;">From</th>
+        <th style="width: 6%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="lbl">ELEMENTARY</td>
+        <td>{{ level_map.Elementary.school_name|na }}</td>
+        <td>{{ level_map.Elementary.degree_course|na }}</td>
+        <td style="text-align: center;">{{ level_map.Elementary.from_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Elementary.to_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Elementary.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ level_map.Elementary.year_graduated|na }}</td>
+        <td>{{ level_map.Elementary.scholarship_academic_honors|na }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">SECONDARY</td>
+        <td>{{ level_map.Secondary.school_name|na }}</td>
+        <td>{{ level_map.Secondary.degree_course|na }}</td>
+        <td style="text-align: center;">{{ level_map.Secondary.from_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Secondary.to_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Secondary.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ level_map.Secondary.year_graduated|na }}</td>
+        <td>{{ level_map.Secondary.scholarship_academic_honors|na }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">VOCATIONAL / TRADE COURSE</td>
+        <td>{{ level_map.Vocational_Trade_Course.school_name|na }}</td>
+        <td>{{ level_map.Vocational_Trade_Course.degree_course|na }}</td>
+        <td style="text-align: center;">{{ level_map.Vocational_Trade_Course.from_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Vocational_Trade_Course.to_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Vocational_Trade_Course.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ level_map.Vocational_Trade_Course.year_graduated|na }}</td>
+        <td>{{ level_map.Vocational_Trade_Course.scholarship_academic_honors|na }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">COLLEGE</td>
+        <td>{{ level_map.College.school_name|na }}</td>
+        <td>{{ level_map.College.degree_course|na }}</td>
+        <td style="text-align: center;">{{ level_map.College.from_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.College.to_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.College.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ level_map.College.year_graduated|na }}</td>
+        <td>{{ level_map.College.scholarship_academic_honors|na }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">GRADUATE STUDIES</td>
+        <td>{{ level_map.Graduate_Studies.school_name|na }}</td>
+        <td>{{ level_map.Graduate_Studies.degree_course|na }}</td>
+        <td style="text-align: center;">{{ level_map.Graduate_Studies.from_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Graduate_Studies.to_year|na }}</td>
+        <td style="text-align: center;">{{ level_map.Graduate_Studies.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ level_map.Graduate_Studies.year_graduated|na }}</td>
+        <td>{{ level_map.Graduate_Studies.scholarship_academic_honors|na }}</td>
+      </tr>
+      <tr>
+        <td colspan="8" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c8 %}(Continued on sheet C8){% else %}(Continue on sheet C8 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Page 1 Signature Line -->
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+  <div style="font-size: 6.5pt; text-align: right; margin-top: 2px;">
+    CS FORM 212 (Revised 2026), Page 1 of {{ total_pds_pages }}
+  </div>
 </div>
 
-<!-- SECTION I: PERSONAL INFORMATION -->
-<div class="section-title">I. PERSONAL INFORMATION</div>
-{% if personal_info %}
-<table>
-  <tr><td class="label">1. Surname</td><td class="value">{{ personal_info.surname }}</td>
-      <td class="label">2. First Name</td><td class="value">{{ personal_info.first_name }}</td></tr>
-  <tr><td class="label">Middle Name</td><td class="value">{{ personal_info.middle_name }}</td>
-      <td class="label">Name Extension</td><td class="value">{{ personal_info.name_extension }}</td></tr>
-  <tr><td class="label">3. Date of Birth</td><td class="value">{{ personal_info.date_of_birth|date:"d/m/Y" }}</td>
-      <td class="label">4. Place of Birth</td><td class="value">{{ personal_info.place_of_birth }}</td></tr>
-  <tr><td class="label">5. Sex at Birth</td><td class="value">{{ personal_info.sex_at_birth }}</td>
-      <td class="label">6. Civil Status</td><td class="value">{{ personal_info.civil_status }}</td></tr>
-  <tr><td class="label">7. Height (m)</td><td class="value">{{ personal_info.height_m }}</td>
-      <td class="label">8. Weight (kg)</td><td class="value">{{ personal_info.weight_kg }}</td></tr>
-  <tr><td class="label">9. Blood Type</td><td class="value">{{ personal_info.blood_type }}</td>
-      <td class="label">16. Citizenship</td><td class="value">{% if personal_info.citizenship_filipino %}Filipino{% endif %}{% if personal_info.dual_citizenship %} / Dual: {{ personal_info.dual_citizenship_country }}{% endif %}</td></tr>
-  <tr><td class="label">10. UMID ID No.</td><td class="value">{{ personal_info.umid_id_no }}</td>
-      <td class="label">11. Pag-IBIG ID No.</td><td class="value">{{ personal_info.pag_ibig_id_no }}</td></tr>
-  <tr><td class="label">12. PhilHealth No.</td><td class="value">{{ personal_info.philhealth_no }}</td>
-      <td class="label">13. PhilSys PCN</td><td class="value">{{ personal_info.philsys_pcn }}</td></tr>
-  <tr><td class="label">14. TIN No.</td><td class="value">{{ personal_info.tin_no }}</td>
-      <td class="label">15. Agency Employee No.</td><td class="value">{{ personal_info.agency_employee_no }}</td></tr>
-  <tr><td class="label">17. Residential Address</td>
-      <td class="value" colspan="3">{{ personal_info.res_house_block_lot }}, {{ personal_info.res_street }}, {{ personal_info.res_subdivision_village }}, Brgy. {{ personal_info.res_barangay }}, {{ personal_info.res_city_municipality }}, {{ personal_info.res_province }} {{ personal_info.res_zip_code }}</td></tr>
-  <tr><td class="label">18. Permanent Address</td>
-      <td class="value" colspan="3">{{ personal_info.perm_house_block_lot }}, {{ personal_info.perm_street }}, {{ personal_info.perm_subdivision_village }}, Brgy. {{ personal_info.perm_barangay }}, {{ personal_info.perm_city_municipality }}, {{ personal_info.perm_province }} {{ personal_info.perm_zip_code }}</td></tr>
-  <tr><td class="label">19. Telephone No.</td><td class="value">{{ personal_info.telephone_no }}</td>
-      <td class="label">20. Mobile No.</td><td class="value">{{ personal_info.mobile_no }}</td></tr>
-  <tr><td class="label">21. Email Address</td><td class="value" colspan="3">{{ personal_info.email_address }}</td></tr>
-</table>
-{% else %}<p><em>Personal information not yet filled.</em></p>{% endif %}
 
-<!-- SECTION II: FAMILY BACKGROUND -->
-<div class="section-title">II. FAMILY BACKGROUND</div>
-{% if family_background %}
-<table>
-  <tr><td class="label">22. Spouse's Surname</td><td>{{ family_background.spouse_surname }}</td>
-      <td class="label">First Name</td><td>{{ family_background.spouse_first_name }}</td></tr>
-  <tr><td class="label">Middle Name</td><td>{{ family_background.spouse_middle_name }}</td>
-      <td class="label">Ext.</td><td>{{ family_background.spouse_name_extension }}</td></tr>
-  <tr><td class="label">Occupation</td><td>{{ family_background.spouse_occupation }}</td>
-      <td class="label">Employer/Business</td><td>{{ family_background.spouse_employer_business_name }}</td></tr>
-  <tr><td class="label">Business Address</td><td colspan="3">{{ family_background.spouse_business_address }}</td></tr>
-  <tr><td class="label">Telephone No.</td><td>{{ family_background.spouse_telephone_no }}</td><td colspan="2"></td></tr>
-  <tr><td class="label">23. Children</td>
-      <td colspan="3">{% for child in family_background.children.all %}{{ child.name }} ({{ child.date_of_birth|date:"d/m/Y" }}){% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>
-  <tr><td class="label">24. Father's Surname</td><td>{{ family_background.father_surname }}</td>
-      <td class="label">First Name</td><td>{{ family_background.father_first_name }}</td></tr>
-  <tr><td class="label">Father's Middle Name</td><td>{{ family_background.father_middle_name }}</td>
-      <td class="label">Ext.</td><td>{{ family_background.father_name_extension }}</td></tr>
-  <tr><td class="label">25. Mother's Maiden Surname</td><td>{{ family_background.mother_surname }}</td>
-      <td class="label">First Name</td><td>{{ family_background.mother_first_name }}</td></tr>
-  <tr><td class="label">Mother's Middle Name</td><td colspan="3">{{ family_background.mother_middle_name }}</td></tr>
-</table>
+<!-- =========================================================================== -->
+<!-- SHEET C2: PAGE 2 OF 4 (Civil Service Eligibility & Work Experience) -->
+<!-- =========================================================================== -->
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+
+  <!-- SECTION IV: CIVIL SERVICE ELIGIBILITY -->
+  <div class="section-banner">IV. CIVIL SERVICE ELIGIBILITY</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 32%;">27. CAREER SERVICE / RA 1080 (BOARD/BAR) / CES / CSEE / BARANGAY ELIGIBILITY / DRIVER'S LICENSE</th>
+        <th rowspan="2" style="width: 10%;">RATING<br>(If Applicable)</th>
+        <th rowspan="2" style="width: 12%;">DATE OF EXAMINATION / CONFERMENT</th>
+        <th rowspan="2" style="width: 26%;">PLACE OF EXAMINATION / CONFERMENT</th>
+        <th colspan="2" style="width: 20%;">LICENSE (if applicable)</th>
+      </tr>
+      <tr>
+        <th style="width: 10%;">NUMBER</th>
+        <th style="width: 10%;">Date of Validity</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cse in c2_cses_padded %}
+      <tr>
+        <td style="height: 15px;">{{ cse.eligibility_type|na }}</td>
+        <td style="text-align: center;">{{ cse.rating|na }}</td>
+        <td style="text-align: center;">{{ cse.examination_date|pds_date }}</td>
+        <td>{{ cse.examination_place|na }}</td>
+        <td style="text-align: center;">{{ cse.license_number|na }}</td>
+        <td style="text-align: center;">{{ cse.license_validity_date|pds_date }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="6" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c9 %}(Continued on sheet C9){% else %}(Continue on sheet C9 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION V: WORK EXPERIENCE -->
+  <div class="section-banner">V. WORK EXPERIENCE (Include private employment. Start from recent work.)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th colspan="2" style="width: 16%;">28. INCLUSIVE DATES<br>(dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 26%;">POSITION TITLE<br>(Write in full / Do not abbreviate)</th>
+        <th rowspan="2" style="width: 26%;">DEPARTMENT / AGENCY / OFFICE / COMPANY<br>(Write in full / Do not abbreviate)</th>
+        <th rowspan="2" style="width: 10%;">MONTHLY<br>SALARY</th>
+        <th rowspan="2" style="width: 7%;">PAY GRADE<br>&amp; STEP</th>
+        <th rowspan="2" style="width: 9%;">STATUS OF<br>APPOINTMENT</th>
+        <th rowspan="2" style="width: 6%;">GOV'T<br>(Y/N)</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for we in c2_wes_padded %}
+      <tr>
+        <td style="text-align: center; height: 13.5px;">{{ we.from_date|pds_date }}</td>
+        <td style="text-align: center;">{% if we.to_present %}Present{% else %}{{ we.to_date|pds_date }}{% endif %}</td>
+        <td>{{ we.position_title|na }}</td>
+        <td>{{ we.department_agency_company|na }}</td>
+        <td style="text-align: right;">{% if we.monthly_salary %}₱{{ we.monthly_salary }}{% else %}N/A{% endif %}</td>
+        <td style="text-align: center;">{{ we.salary_grade|na }}</td>
+        <td style="text-align: center;">{{ we.appointment_status|na }}</td>
+        <td style="text-align: center;">{% if we %}{% if we.is_government_service %}Y{% else %}N{% endif %}{% else %}N/A{% endif %}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="8" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c6 %}(Continued on sheet C6){% else %}(Continue on sheet C6 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Page 2 Signature Line -->
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+  <div style="font-size: 6.5pt; text-align: right; margin-top: 2px;">
+    CS FORM 212 (Revised 2026), Page 2 of {{ total_pds_pages }}
+  </div>
+</div>
+
+
+<!-- =========================================================================== -->
+<!-- SHEET C3: PAGE 3 OF 4 (L&D, Voluntary Work, Other Information) -->
+<!-- =========================================================================== -->
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+
+  <!-- SECTION VI: LEARNING AND DEVELOPMENT -->
+  <div class="section-banner">VI. LEARNING AND DEVELOPMENT (L&amp;D) INTERVENTIONS / TRAINING PROGRAMS ATTENDED (Start from recent)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 42%;">29. TITLE OF LEARNING AND DEVELOPMENT INTERVENTIONS / TRAINING PROGRAMS<br>(Write in full)</th>
+        <th colspan="2" style="width: 16%;">INCLUSIVE DATES OF ATTENDANCE<br>(dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 8%;">NUMBER<br>OF HOURS</th>
+        <th rowspan="2" style="width: 12%;">Type of LD<br>(Managerial/Tech/etc)</th>
+        <th rowspan="2" style="width: 22%;">CONDUCTED / SPONSORED BY<br>(Write in full)</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ld in c3_lds_padded %}
+      <tr>
+        <td style="height: 13.5px;">{{ ld.training_title|na }}</td>
+        <td style="text-align: center;">{{ ld.from_date|pds_date }}</td>
+        <td style="text-align: center;">{{ ld.to_date|pds_date }}</td>
+        <td style="text-align: center;">{% if ld.number_of_hours %}{{ ld.number_of_hours }}{% else %}N/A{% endif %}</td>
+        <td style="text-align: center;">{{ ld.ld_type|na }}</td>
+        <td>{{ ld.conducted_sponsored_by|na }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="6" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c5 %}(Continued on sheet C5){% else %}(Continue on sheet C5 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION VII: VOLUNTARY WORK -->
+  <div class="section-banner">VII. VOLUNTARY WORK OR INVOLVEMENT IN CIVIC / NON-GOVERNMENT / PEOPLE / VOLUNTARY ORGANIZATION/S</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 46%;">30. NAME &amp; ADDRESS OF ORGANIZATION<br>(Write in full)</th>
+        <th colspan="2" style="width: 16%;">INCLUSIVE DATES<br>(dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 10%;">NUMBER<br>OF HOURS</th>
+        <th rowspan="2" style="width: 28%;">POSITION / NATURE OF WORK</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vw in c3_vws_padded %}
+      <tr>
+        <td style="height: 13.5px;">{{ vw.organization_name_address|na }}</td>
+        <td style="text-align: center;">{{ vw.from_date|pds_date }}</td>
+        <td style="text-align: center;">{{ vw.to_date|pds_date }}</td>
+        <td style="text-align: center;">{% if vw.number_of_hours %}{{ vw.number_of_hours }}{% else %}N/A{% endif %}</td>
+        <td>{{ vw.position_nature_of_work|na }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="5" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c10 %}(Continued on sheet C10){% else %}(Continue on sheet C10 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION VIII: OTHER INFORMATION -->
+  <div class="section-banner">VIII. OTHER INFORMATION</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th style="width: 33%;">31. SPECIAL SKILLS and HOBBIES</th>
+        <th style="width: 34%;">32. NON-ACADEMIC DISTINCTIONS / RECOGNITION<br>(Write in full)</th>
+        <th style="width: 33%;">33. MEMBERSHIP IN ASSOCIATION/ORGANIZATION<br>(Write in full)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in c3_other_rows %}
+      <tr>
+        <td style="height: 14px;">{{ row.skill|na }}</td>
+        <td>{{ row.distinction|na }}</td>
+        <td>{{ row.membership|na }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="3" class="sub-note" style="text-align: center; background: #fafafa;">
+          {% if has_c11 %}(Continued on sheet C11){% else %}(Continue on sheet C11 if necessary){% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Page 3 Signature Line -->
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+  <div style="font-size: 6.5pt; text-align: right; margin-top: 2px;">
+    CS FORM 212 (Revised 2026), Page 3 of {{ total_pds_pages }}
+  </div>
+</div>
+
+
+<!-- =========================================================================== -->
+<!-- SHEET C4: PAGE 4 OF 4 (Questions 34-40, References, Declaration) -->
+<!-- =========================================================================== -->
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+
+  <table class="pds-table" style="font-size: 6.8pt;">
+    <tr>
+      <td style="width: 65%;">
+        <strong>34.</strong> Are you related by consanguinity or affinity to the appointing or recommending authority, or to chief of bureau or office or person exercising immediate supervision over you?<br>
+        a. Within the third degree?<br>
+        b. Within the fourth degree (for Local Government employees)?
+      </td>
+      <td style="width: 35%;">
+        a. [{{ government_questions.q34a_related_third_degree|pds_yn }}] {% if government_questions.q34a_details %}Details: {{ government_questions.q34a_details }}{% endif %}<br>
+        b. [{{ government_questions.q34b_related_fourth_degree|pds_yn }}] {% if government_questions.q34b_details %}Details: {{ government_questions.q34b_details }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>35.</strong> a. Have you ever been found guilty of any administrative offense?<br>
+        b. Have you been criminally charged before any court?
+      </td>
+      <td>
+        a. [{{ government_questions.q35a_admin_offense|pds_yn }}] {% if government_questions.q35a_details %}Details: {{ government_questions.q35a_details }}{% endif %}<br>
+        b. [{{ government_questions.q35b_criminal_charged|pds_yn }}] {% if government_questions.q35b_date_filed %}Date: {{ government_questions.q35b_date_filed|pds_date }} | Status: {{ government_questions.q35b_status|na }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>36.</strong> Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?
+      </td>
+      <td>
+        [{{ government_questions.q36_convicted|pds_yn }}] {% if government_questions.q36_details %}Details: {{ government_questions.q36_details }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>37.</strong> Have you ever been separated from the service in any mode (resignation, retirement, dropped from rolls, dismissal, termination, phased out)?
+      </td>
+      <td>
+        [{{ government_questions.q37_separated_service|pds_yn }}] {% if government_questions.q37_details %}Details: {{ government_questions.q37_details }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>38.</strong> a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?<br>
+        b. Have you resigned from government service during 3-month period before election to campaign?
+      </td>
+      <td>
+        a. [{{ government_questions.q38a_candidate_election|pds_yn }}] {% if government_questions.q38a_details %}Details: {{ government_questions.q38a_details }}{% endif %}<br>
+        b. [{{ government_questions.q38b_resigned_campaign|pds_yn }}] {% if government_questions.q38b_details %}Details: {{ government_questions.q38b_details }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>39.</strong> Have you acquired the status of an immigrant or permanent resident of another country?
+      </td>
+      <td>
+        [{{ government_questions.q39_immigrant_permanent_resident|pds_yn }}] {% if government_questions.q39_country %}Country: {{ government_questions.q39_country }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>40.</strong> Pursuant to: (a) Indigenous People's Act; (b) Magna Carta for Disabled Persons; and (c) Expanded Solo Parents Welfare Act:<br>
+        a. Are you a member of any indigenous group?<br>
+        b. Are you a person with disability?<br>
+        c. Are you a solo parent?
+      </td>
+      <td>
+        a. [{{ government_questions.q40a_indigenous_group|pds_yn }}] {% if government_questions.q40a_specify %}Specify: {{ government_questions.q40a_specify }}{% endif %}<br>
+        b. [{{ government_questions.q40b_person_with_disability|pds_yn }}] {% if government_questions.q40b_id_number %}PWD ID: {{ government_questions.q40b_id_number }}{% endif %}<br>
+        c. [{{ government_questions.q40c_solo_parent|pds_yn }}] {% if government_questions.q40c_id_number %}Solo Parent ID: {{ government_questions.q40c_id_number }}{% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <!-- REFERENCES -->
+  <div class="section-banner">41. REFERENCES (Person not related by consanguinity or affinity to applicant / appointee)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th style="width: 34%;">NAME (First Name, MI, Surname)</th>
+        <th style="width: 44%;">OFFICE / RESIDENTIAL ADDRESS</th>
+        <th style="width: 22%;">CONTACT NO. / EMAIL</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ref in c4_refs_padded %}
+      <tr>
+        <td style="height: 15px;">{{ ref.name|na }}</td>
+        <td>{{ ref.office_residential_address|na }}</td>
+        <td>{{ ref.contact_no_email|na }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ITEM 42: DECLARATION UNDER OATH (Full CS Form 212 Revised 2026 Layout) -->
+  <table class="pds-table" style="margin-top: 3px;">
+    <tr>
+      <td colspan="3" class="lbl" style="background: #e8e8e8; font-size: 6.7pt; padding: 4px; text-align: justify; line-height: 1.2;">
+        <strong>42.</strong> I declare under oath that I have personally accomplished this Personal Data Sheet which is a true, correct, and complete statement pursuant to the provisions of pertinent laws, rules, and regulations of the Republic of the Philippines. I authorize the agency head/authorized representative to verify/validate the contents stated herein. I agree that any misrepresentation made in this document and its attachments shall cause the filing of administrative/criminal case/s against me.
+      </td>
+    </tr>
+    <tr>
+      <!-- Column 1: Government Issued ID -->
+      <td style="width: 38%; vertical-align: top; padding: 4px; font-size: 6.8pt; background: #ffffff;">
+        <div style="font-size: 6.2pt; font-weight: bold; margin-bottom: 5px;">
+          Government Issued ID (i.e. Passport, GSIS, SSS, PRC, Driver's License, etc.)<br>
+          <span style="font-size: 5.8pt; color: #555;">PLEASE INDICATE ID Number and Date of Issuance</span>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; border: none; font-size: 6.8pt;">
+          <tr>
+            <td style="border: none; padding: 2px 0; font-weight: bold; width: 45%;">Government Issued ID:</td>
+            <td style="border-bottom: 1px solid #000; padding: 2px 0;">{{ pds_declaration.government_id_type|na }}</td>
+          </tr>
+          <tr>
+            <td style="border: none; padding: 2px 0; font-weight: bold;">ID/License/Passport No.:</td>
+            <td style="border-bottom: 1px solid #000; padding: 2px 0;">{{ pds_declaration.id_license_passport_no|na }}</td>
+          </tr>
+          <tr>
+            <td style="border: none; padding: 2px 0; font-weight: bold;">Date/Place of Issuance:</td>
+            <td style="border-bottom: 1px solid #000; padding: 2px 0;">{{ pds_declaration.date_place_of_issuance|na }}</td>
+          </tr>
+        </table>
+      </td>
+
+      <!-- Column 2: Signature Box & Date Accomplished -->
+      <td style="width: 34%; vertical-align: top; padding: 4px; text-align: center; background: #ffffff;">
+        <div style="font-size: 6pt; color: #444; margin-bottom: 2px;">(e-signature/digital certificate)</div>
+        <div style="border: 1px solid #000; min-height: 48px; text-align: center; padding: 4px 4px 2px 4px; margin-bottom: 2px; background: #fdfdfd;">
+          {% if signature_data_uri %}
+            <img src="{{ signature_data_uri }}" style="max-height: 38px; max-width: 130px; object-fit: contain;" /><br>
+            <span style="font-size: 5.5pt; color: #555;">{{ teacher.user.get_full_name }}</span>
+          {% else %}
+            <div style="font-family: 'Times New Roman', serif; font-size: 9pt; font-weight: bold; font-style: italic; letter-spacing: 0.5px; margin-top: 6px;">
+              {{ teacher.user.get_full_name }}
+            </div>
+            <div style="font-size: 5.5pt; color: #1e7e34; margin-top: 4px;">[Verified] Digitally Certified / E-Signature</div>
+          {% endif %}
+        </div>
+        <div style="font-size: 6pt; font-weight: bold; margin-bottom: 6px;">Signature (Sign inside the box)</div>
+
+        <div style="border: 1px solid #000; min-height: 18px; text-align: center; padding: 2px; background: #fdfdfd; font-size: 6.8pt; font-weight: bold;">
+          {{ pds_declaration.date_accomplished|pds_date }}
+        </div>
+        <div style="font-size: 6pt; font-weight: bold;">Date Accomplished</div>
+      </td>
+
+      <!-- Column 3: Photo & Right Thumbmark -->
+      <td style="width: 28%; vertical-align: top; padding: 4px; text-align: center; background: #ffffff;">
+        <table style="width: 100%; border: none; border-collapse: collapse;">
+          <tr>
+            <td style="border: none; text-align: center; padding: 0 0 4px 0;">
+              {% if photo_data_uri %}
+                <img src="{{ photo_data_uri }}" style="width: 3.5cm; height: 4.5cm; object-fit: cover; border: 1px solid #000;" />
+              {% else %}
+                <div class="photo-box">
+                  <div style="font-weight: bold; margin-top: 10px;">PHOTO</div>
+                  <div style="margin-top: 8px; font-size: 5.8pt; line-height: 1.15; padding: 0 3px;">
+                    ID picture taken within the last 6 months<br>
+                    <strong>4.5 cm x 3.5 cm</strong><br>
+                    (Passport size)<br><br>
+                    Computer generated or photocopied picture is not acceptable
+                  </div>
+                </div>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td style="border: none; text-align: center; padding: 2px 0 0 0;">
+              <div class="thumb-box" style="height: 2.2cm;">
+                <div style="margin-top: 15px; font-size: 6pt; font-weight: bold; color: #555;">
+                  Right Thumbmark
+                </div>
+                {% if pds_declaration.has_thumbmark %}
+                  <div style="font-size: 5.5pt; color: #004085; margin-top: 4px;">[Thumbmark Affixed]</div>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Jurat / Subscribed and Sworn To Block -->
+    <tr>
+      <td colspan="3" style="font-size: 6.5pt; background: #fafafa; padding: 6px; border: 1px solid #000;">
+        SUBSCRIBED AND SWORN to before me this <strong>{{ pds_declaration.subscribed_date|default:"______ day of _______________, 20____" }}</strong>, affiant exhibiting his/her validly issued government ID as indicated above.
+        <br><br>
+        <div style="text-align: right; width: 65%; margin-left: auto;">
+          <div style="border-bottom: 1px solid #000; display: inline-block; min-width: 260px; text-align: center; font-weight: bold; font-size: 7.5pt;">
+            {{ pds_declaration.administering_officer_name|default:"&nbsp;" }}
+          </div>
+          <br>
+          <span style="font-weight: bold; font-size: 6.8pt;">Person Administering Oath</span><br>
+          <span style="font-size: 5.8pt; font-style: italic; color: #555;">(e-signature/digital certificate except for notary public)</span>
+          {% if pds_declaration.administering_officer_title %}
+            <br><span style="font-size: 6.5pt; color: #222;">{{ pds_declaration.administering_officer_title }}{% if pds_declaration.administering_officer_office %}, {{ pds_declaration.administering_officer_office }}{% endif %}</span>
+          {% endif %}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 6.5pt; text-align: right; margin-top: 2px;">
+    CS FORM 212 (Revised 2026), Page 4 of {{ total_pds_pages }}
+  </div>
+</div>
+
+
+<!-- =========================================================================== -->
+<!-- CONTINUATION SHEETS (Only printed when extra entries exist) -->
+<!-- =========================================================================== -->
+
+<!-- SHEET C7: FAMILY BACKGROUND (Continuation) -->
+{% if has_c7 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">FAMILY BACKGROUND (Continuation Sheet C7)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th style="width: 10%;">#</th>
+        <th style="width: 60%;">23. NAME of CHILDREN (Write full name and list all)</th>
+        <th style="width: 30%;">DATE OF BIRTH (dd/mm/yyyy)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ch in c7_children_overflow %}
+      <tr>
+        <td style="text-align: center;">{{ forloop.counter|add:12 }}</td>
+        <td>{{ ch.name|na }}</td>
+        <td style="text-align: center;">{{ ch.date_of_birth|pds_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
 {% endif %}
 
-<!-- SECTION III: EDUCATIONAL BACKGROUND -->
-<div class="section-title">III. EDUCATIONAL BACKGROUND</div>
-<table>
-  <tr>
-    <th>26. Level</th><th>School Name</th><th>Degree/Course</th>
-    <th>From</th><th>To</th><th>Highest Level/Units</th>
-    <th>Year Graduated</th><th>Honors/Scholarship</th>
-  </tr>
-  {% for edu in educational_backgrounds %}
-  <tr>
-    <td>{{ edu.level }}</td><td>{{ edu.school_name }}</td><td>{{ edu.degree_course }}</td>
-    <td>{{ edu.from_year }}</td><td>{{ edu.to_year }}</td>
-    <td>{{ edu.highest_level_units_earned }}</td>
-    <td>{{ edu.year_graduated }}</td><td>{{ edu.scholarship_academic_honors }}</td>
-  </tr>
-  {% empty %}<tr><td colspan="8"><em>No records.</em></td></tr>{% endfor %}
-</table>
-
-<!-- SECTION IV: CIVIL SERVICE ELIGIBILITY -->
-<div class="section-title">IV. CIVIL SERVICE ELIGIBILITY</div>
-<table>
-  <tr><th>27. Eligibility Type</th><th>Rating</th><th>Exam Date</th><th>Exam Place</th><th>License No.</th><th>Validity</th></tr>
-  {% for cse in civil_service_eligibilities %}
-  <tr>
-    <td>{{ cse.eligibility_type }}</td><td>{{ cse.rating }}</td>
-    <td>{{ cse.examination_date|date:"d/m/Y" }}</td><td>{{ cse.examination_place }}</td>
-    <td>{{ cse.license_number }}</td><td>{{ cse.license_validity_date|date:"d/m/Y" }}</td>
-  </tr>
-  {% empty %}<tr><td colspan="6"><em>No records.</em></td></tr>{% endfor %}
-</table>
-
-<!-- SECTION V: WORK EXPERIENCE -->
-<div class="section-title">V. WORK EXPERIENCE</div>
-<table>
-  <tr><th>28. From</th><th>To</th><th>Position Title</th><th>Department/Company</th><th>Salary</th><th>Grade</th><th>Status</th><th>Gov't</th></tr>
-  {% for we in work_experiences %}
-  <tr>
-    <td>{{ we.from_date|date:"d/m/Y" }}</td>
-    <td>{% if we.to_present %}Present{% else %}{{ we.to_date|date:"d/m/Y" }}{% endif %}</td>
-    <td>{{ we.position_title }}</td><td>{{ we.department_agency_company }}</td>
-    <td>{{ we.monthly_salary }}</td><td>{{ we.salary_grade }}</td>
-    <td>{{ we.appointment_status }}</td>
-    <td>{% if we.is_government_service %}Y{% else %}N{% endif %}</td>
-  </tr>
-  {% empty %}<tr><td colspan="8"><em>No records.</em></td></tr>{% endfor %}
-</table>
-
-<!-- SECTION VI: LEARNING & DEVELOPMENT -->
-<div class="section-title">VI. LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS ATTENDED</div>
-<table>
-  <tr><th>29. Training Title</th><th>From</th><th>To</th><th>Hours</th><th>Type</th><th>Conducted By</th></tr>
-  {% for ld in learning_developments %}
-  <tr>
-    <td>{{ ld.training_title }}</td>
-    <td>{{ ld.from_date|date:"d/m/Y" }}</td><td>{{ ld.to_date|date:"d/m/Y" }}</td>
-    <td>{{ ld.number_of_hours }}</td><td>{{ ld.ld_type }}</td>
-    <td>{{ ld.conducted_sponsored_by }}</td>
-  </tr>
-  {% empty %}<tr><td colspan="6"><em>No records.</em></td></tr>{% endfor %}
-</table>
-
-<!-- SECTION VII: VOLUNTARY WORK -->
-<div class="section-title">VII. VOLUNTARY WORK</div>
-<table>
-  <tr><th>30. Organization Name &amp; Address</th><th>From</th><th>To</th><th>Hours</th><th>Position/Nature of Work</th></tr>
-  {% for vw in voluntary_works %}
-  <tr>
-    <td>{{ vw.organization_name_address }}</td>
-    <td>{{ vw.from_date|date:"d/m/Y" }}</td><td>{{ vw.to_date|date:"d/m/Y" }}</td>
-    <td>{{ vw.number_of_hours }}</td><td>{{ vw.position_nature_of_work }}</td>
-  </tr>
-  {% empty %}<tr><td colspan="5"><em>No records.</em></td></tr>{% endfor %}
-</table>
-
-<!-- SECTION VIII: OTHER INFORMATION -->
-{% if other_information %}
-<div class="section-title">VIII. OTHER INFORMATION</div>
-<table>
-  <tr>
-    <th>31. Special Skills &amp; Hobbies</th>
-    <th>32. Non-Academic Distinctions</th>
-    <th>33. Memberships in Organizations</th>
-  </tr>
-  <tr>
-    <td>{% for s in other_information.special_skills_hobbies %}{{ s }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-    <td>{% for d in other_information.non_academic_distinctions %}{{ d }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-    <td>{% for m in other_information.organization_memberships %}{{ m }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-  </tr>
-</table>
+<!-- SHEET C8: EDUCATIONAL BACKGROUND (Continuation) -->
+{% if has_c8 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">EDUCATIONAL BACKGROUND (Continuation Sheet C8)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 14%;">LEVEL</th>
+        <th rowspan="2" style="width: 26%;">NAME OF SCHOOL (Write in full)</th>
+        <th rowspan="2" style="width: 22%;">BASIC EDUCATION / DEGREE / COURSE (Write in full)</th>
+        <th colspan="2" style="width: 12%;">PERIOD OF ATTENDANCE</th>
+        <th rowspan="2" style="width: 9%;">HIGHEST LEVEL / UNITS</th>
+        <th rowspan="2" style="width: 7%;">YEAR GRAD.</th>
+        <th rowspan="2" style="width: 10%;">SCHOLARSHIP / HONORS</th>
+      </tr>
+      <tr>
+        <th style="width: 6%;">From</th>
+        <th style="width: 6%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for edu in c8_edus_overflow %}
+      <tr>
+        <td class="lbl">{{ edu.level|na }}</td>
+        <td>{{ edu.school_name|na }}</td>
+        <td>{{ edu.degree_course|na }}</td>
+        <td style="text-align: center;">{{ edu.from_year|na }}</td>
+        <td style="text-align: center;">{{ edu.to_year|na }}</td>
+        <td style="text-align: center;">{{ edu.highest_level_units_earned|na }}</td>
+        <td style="text-align: center;">{{ edu.year_graduated|na }}</td>
+        <td>{{ edu.scholarship_academic_honors|na }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
 {% endif %}
 
-<!-- REFERENCES -->
-<div class="section-title">41. REFERENCES</div>
-<table>
-  <tr><th>Name</th><th>Office/Residential Address</th><th>Contact No./Email</th></tr>
-  {% for ref in references %}
-  <tr><td>{{ ref.name }}</td><td>{{ ref.office_residential_address }}</td><td>{{ ref.contact_no_email }}</td></tr>
-  {% empty %}<tr><td colspan="3"><em>No references.</em></td></tr>{% endfor %}
-</table>
-
-<!-- DECLARATION -->
-{% if pds_declaration %}
-<div class="section-title">42. DECLARATION</div>
-<table>
-  <tr>
-    <td class="label">Government Issued ID</td><td>{{ pds_declaration.government_id_type }}</td>
-    <td class="label">ID/License/Passport No.</td><td>{{ pds_declaration.id_license_passport_no }}</td>
-  </tr>
-  <tr>
-    <td class="label">Date/Place of Issuance</td><td>{{ pds_declaration.date_place_of_issuance }}</td>
-    <td class="label">Date Accomplished</td><td>{{ pds_declaration.date_accomplished|date:"d/m/Y" }}</td>
-  </tr>
-</table>
+<!-- SHEET C9: CIVIL SERVICE ELIGIBILITY (Continuation) -->
+{% if has_c9 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">CIVIL SERVICE ELIGIBILITY (Continuation Sheet C9)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 32%;">CAREER SERVICE / RA 1080 (BOARD/BAR) / CES / CSEE / ELIGIBILITY</th>
+        <th rowspan="2" style="width: 10%;">RATING (If Applicable)</th>
+        <th rowspan="2" style="width: 12%;">DATE OF EXAM / CONFERMENT</th>
+        <th rowspan="2" style="width: 26%;">PLACE OF EXAM / CONFERMENT</th>
+        <th colspan="2" style="width: 20%;">LICENSE (if applicable)</th>
+      </tr>
+      <tr>
+        <th style="width: 10%;">NUMBER</th>
+        <th style="width: 10%;">Date of Validity</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cse in c9_cses_overflow %}
+      <tr>
+        <td>{{ cse.eligibility_type|na }}</td>
+        <td style="text-align: center;">{{ cse.rating|na }}</td>
+        <td style="text-align: center;">{{ cse.examination_date|pds_date }}</td>
+        <td>{{ cse.examination_place|na }}</td>
+        <td style="text-align: center;">{{ cse.license_number|na }}</td>
+        <td style="text-align: center;">{{ cse.license_validity_date|pds_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
 {% endif %}
 
-<br>
-<p style="font-size:7pt;text-align:center;">CS FORM 212 (Revised 2026) — Generated by Teacher eProfile System</p>
+<!-- SHEET C6: WORK EXPERIENCE (Continuation) -->
+{% if has_c6 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">WORK EXPERIENCE (Continuation Sheet C6)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th colspan="2" style="width: 16%;">INCLUSIVE DATES (dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 26%;">POSITION TITLE (Write in full)</th>
+        <th rowspan="2" style="width: 26%;">DEPARTMENT / AGENCY / COMPANY (Write in full)</th>
+        <th rowspan="2" style="width: 10%;">MONTHLY SALARY</th>
+        <th rowspan="2" style="width: 7%;">PAY GRADE</th>
+        <th rowspan="2" style="width: 9%;">STATUS</th>
+        <th rowspan="2" style="width: 6%;">GOV'T</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for we in c6_wes_overflow %}
+      <tr>
+        <td style="text-align: center;">{{ we.from_date|pds_date }}</td>
+        <td style="text-align: center;">{% if we.to_present %}Present{% else %}{{ we.to_date|pds_date }}{% endif %}</td>
+        <td>{{ we.position_title|na }}</td>
+        <td>{{ we.department_agency_company|na }}</td>
+        <td style="text-align: right;">{% if we.monthly_salary %}₱{{ we.monthly_salary }}{% else %}N/A{% endif %}</td>
+        <td style="text-align: center;">{{ we.salary_grade|na }}</td>
+        <td style="text-align: center;">{{ we.appointment_status|na }}</td>
+        <td style="text-align: center;">{% if we.is_government_service %}Y{% else %}N{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
+<!-- SHEET C5: LEARNING & DEVELOPMENT (Continuation) -->
+{% if has_c5 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">LEARNING AND DEVELOPMENT (L&amp;D) (Continuation Sheet C5)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 42%;">TITLE OF TRAINING / SEMINAR (Write in full)</th>
+        <th colspan="2" style="width: 16%;">INCLUSIVE DATES (dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 8%;">HOURS</th>
+        <th rowspan="2" style="width: 12%;">Type of LD</th>
+        <th rowspan="2" style="width: 22%;">CONDUCTED / SPONSORED BY (Write in full)</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ld in c5_lds_overflow %}
+      <tr>
+        <td>{{ ld.training_title|na }}</td>
+        <td style="text-align: center;">{{ ld.from_date|pds_date }}</td>
+        <td style="text-align: center;">{{ ld.to_date|pds_date }}</td>
+        <td style="text-align: center;">{% if ld.number_of_hours %}{{ ld.number_of_hours }}{% else %}N/A{% endif %}</td>
+        <td style="text-align: center;">{{ ld.ld_type|na }}</td>
+        <td>{{ ld.conducted_sponsored_by|na }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
+<!-- SHEET C10: VOLUNTARY WORK (Continuation) -->
+{% if has_c10 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">VOLUNTARY WORK (Continuation Sheet C10)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width: 46%;">NAME &amp; ADDRESS OF ORGANIZATION (Write in full)</th>
+        <th colspan="2" style="width: 16%;">INCLUSIVE DATES (dd/mm/yyyy)</th>
+        <th rowspan="2" style="width: 10%;">HOURS</th>
+        <th rowspan="2" style="width: 28%;">POSITION / NATURE OF WORK</th>
+      </tr>
+      <tr>
+        <th style="width: 8%;">From</th>
+        <th style="width: 8%;">To</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vw in c10_vws_overflow %}
+      <tr>
+        <td>{{ vw.organization_name_address|na }}</td>
+        <td style="text-align: center;">{{ vw.from_date|pds_date }}</td>
+        <td style="text-align: center;">{{ vw.to_date|pds_date }}</td>
+        <td style="text-align: center;">{% if vw.number_of_hours %}{{ vw.number_of_hours }}{% else %}N/A{% endif %}</td>
+        <td>{{ vw.position_nature_of_work|na }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
+<!-- SHEET C11: OTHER INFORMATION (Continuation) -->
+{% if has_c11 %}
+<div class="page-container">
+  <div class="form-number">CS Form No. 212 (Revised 2026)</div>
+  <div class="continuation-banner">OTHER INFORMATION (Continuation Sheet C11)</div>
+  <table class="pds-table">
+    <thead>
+      <tr>
+        <th style="width: 33%;">SPECIAL SKILLS and HOBBIES</th>
+        <th style="width: 34%;">NON-ACADEMIC DISTINCTIONS / RECOGNITION (Write in full)</th>
+        <th style="width: 33%;">MEMBERSHIP IN ASSOCIATION/ORGANIZATION (Write in full)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in c11_other_overflow %}
+      <tr>
+        <td>{{ row.skill|na }}</td>
+        <td>{{ row.distinction|na }}</td>
+        <td>{{ row.membership|na }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="sig-table">
+    <tr>
+      <td style="width: 15%; font-weight: bold; background: #eaeaea;">SIGNATURE</td>
+      <td style="width: 50%;">{{ teacher.user.get_full_name }} (Digital Certificate)</td>
+      <td style="width: 10%; font-weight: bold; background: #eaeaea;">DATE</td>
+      <td style="width: 25%;">{{ pds_declaration.date_accomplished|pds_date }}</td>
+    </tr>
+  </table>
+</div>
+{% endif %}
 
 </body>
 </html>

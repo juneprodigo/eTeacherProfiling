@@ -64,8 +64,14 @@
               <router-link :to="`/teachers/${t.id}`" class="btn-pds">
                 Edit PDS
               </router-link>
-              <button @click="exportPDF(t.id, t.full_name)" class="btn-pdf" title="Export CS Form 212">
+              <button @click="previewPDF(t.id, t.full_name)" class="btn-pdf btn-preview" title="Preview CS Form 212">
+                👁️ Preview
+              </button>
+              <button @click="exportPDF(t.id, t.full_name)" class="btn-pdf" title="Export CS Form 212 PDF">
                 📄 PDF
+              </button>
+              <button @click="exportExcel(t.id, t.full_name)" class="btn-pdf btn-excel" title="Download Official CS Form 212 (.xlsx)">
+                📊 Excel
               </button>
             </td>
           </tr>
@@ -78,15 +84,15 @@
 
     <!-- Simple Create Profile Modal -->
     <div v-if="showCreateModal" class="modal-backdrop">
-      <div class="modal-card glass-panel">
-        <h3>Create Teacher Profile</h3>
-        <p class="modal-sub">Link a Teacher account to a profile record.</p>
+      <div class="modal-card glass-card">
+        <h3>Create New Teacher Profile</h3>
+        <p class="modal-sub">Assign an existing user account with the 'Teacher' role to initialize their official 2026 CS Form 212.</p>
 
         <form @submit.prevent="createProfile">
           <div class="modal-field">
-            <label>Select User Account (Role: Teacher)</label>
+            <label>Select User Account *</label>
             <select v-model="newProfile.user_id" required>
-              <option value="" disabled>Choose account</option>
+              <option value="" disabled>-- Select a registered teacher --</option>
               <option v-for="u in availableUsers" :key="u.id" :value="u.id">
                 {{ u.full_name || u.username }} ({{ u.email }})
               </option>
@@ -94,18 +100,18 @@
           </div>
 
           <div class="modal-field">
-            <label>Employee ID</label>
-            <input v-model="newProfile.employee_id" type="text" placeholder="e.g. DEPED-2026-002" />
+            <label>Employee ID No. (Optional)</label>
+            <input v-model="newProfile.employee_id" type="text" placeholder="e.g. EMP-2026-001" />
           </div>
 
           <div class="modal-field">
-            <label>Department</label>
-            <input v-model="newProfile.department" type="text" placeholder="e.g. Mathematics Department" />
+            <label>Department / Academic Unit</label>
+            <input v-model="newProfile.department" type="text" placeholder="e.g. Science & Mathematics" />
           </div>
 
           <div class="modal-field">
-            <label>Position</label>
-            <input v-model="newProfile.position" type="text" placeholder="e.g. Teacher III" />
+            <label>Position Title</label>
+            <input v-model="newProfile.position" type="text" placeholder="e.g. Master Teacher I" />
           </div>
 
           <div class="modal-actions">
@@ -115,19 +121,43 @@
         </form>
       </div>
     </div>
+
+    <!-- PDF Preview Modal -->
+    <PdfPreviewModal
+      :show="showPreviewModal"
+      :teacherId="previewTeacherId"
+      :teacherName="previewTeacherName"
+      @close="showPreviewModal = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { usePDSStore } from '@/stores/pds'
+import { useAuthStore } from '@/stores/auth'
 import api from '@/api'
+import PdfPreviewModal from '@/components/PdfPreviewModal.vue'
+import notify from '@/utils/notify'
 
 const pdsStore = usePDSStore()
+const authStore = useAuthStore()
+
 const searchQuery = ref('')
 const filterStatus = ref('')
 const showCreateModal = ref(false)
 const availableUsers = ref([])
+
+// Preview Modal State
+const showPreviewModal = ref(false)
+const previewTeacherId = ref(null)
+const previewTeacherName = ref('')
+
+const previewPDF = (id, name) => {
+  previewTeacherId.value = id
+  previewTeacherName.value = name
+  showPreviewModal.value = true
+}
 
 const newProfile = ref({
   user_id: '',
@@ -147,6 +177,10 @@ const exportPDF = (id, name) => {
   pdsStore.exportPDF(id, name)
 }
 
+const exportExcel = (id, name) => {
+  pdsStore.exportExcel(id, name)
+}
+
 const loadAvailableUsers = async () => {
   try {
     const res = await api.get('/auth/users/?role=teacher')
@@ -161,9 +195,10 @@ const createProfile = async () => {
     await api.post('/teachers/', newProfile.value)
     showCreateModal.value = false
     newProfile.value = { user_id: '', employee_id: '', department: '', position: '' }
+    notify.success('Teacher profile created successfully!')
     await pdsStore.fetchTeachers()
   } catch (err) {
-    alert(err.response?.data?.error || 'Failed to create profile')
+    notify.error(err.response?.data?.error || 'Failed to create profile')
   }
 }
 
@@ -222,7 +257,7 @@ onMounted(async () => {
 
 .btn-create {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
   font-weight: 700;
   padding: 0.65rem 1rem;
   border-radius: var(--radius-sm);
@@ -311,7 +346,7 @@ onMounted(async () => {
 
 .btn-pds:hover {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
 }
 
 .btn-pdf {
@@ -326,6 +361,28 @@ onMounted(async () => {
 .btn-pdf:hover {
   background: var(--accent-blue);
   color: white;
+}
+
+.btn-preview {
+  background: var(--accent-gold-subtle);
+  color: var(--accent-gold);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.btn-preview:hover {
+  background: var(--accent-gold);
+  color: var(--text-on-accent, #24120a);
+}
+
+.btn-excel {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.btn-excel:hover {
+  background: #10b981;
+  color: #ffffff;
 }
 
 .no-data {
@@ -387,7 +444,7 @@ onMounted(async () => {
 
 .btn-submit {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
   font-weight: 700;
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-sm);

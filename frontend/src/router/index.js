@@ -7,6 +7,9 @@ import DashboardView from '@/views/DashboardView.vue'
 import TeacherListView from '@/views/TeacherListView.vue'
 import TeacherDetailView from '@/views/TeacherDetailView.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
+import TeacherAnalyticsView from '@/views/TeacherAnalyticsView.vue'
+import SchoolActivitiesView from '@/views/SchoolActivitiesView.vue'
+import AttendanceView from '@/views/AttendanceView.vue'
 
 const routes = [
   {
@@ -30,6 +33,24 @@ const routes = [
         name: 'Teachers',
         component: TeacherListView,
         meta: { title: 'Faculty & Teacher Directory', requiresStaff: true }
+      },
+      {
+        path: 'attendance',
+        name: 'Attendance',
+        component: AttendanceView,
+        meta: { title: 'Time & Attendance Management (CSC Form 48)' }
+      },
+      {
+        path: 'activities',
+        name: 'SchoolActivities',
+        component: SchoolActivitiesView,
+        meta: { title: 'School Activities Monitoring & Management' }
+      },
+      {
+        path: 'analytics',
+        name: 'TeacherAnalytics',
+        component: TeacherAnalyticsView,
+        meta: { title: "Teacher's Analytics & Training Hub", requiresStaff: true }
       },
       {
         path: 'teachers/:id',

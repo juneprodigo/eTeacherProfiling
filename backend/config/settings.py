@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'pds',
+    'activities',
+    'attendance',
 ]
 
 # ── Middleware ─────────────────────────────────────────────────────────────────

@@ -192,7 +192,7 @@ onMounted(async () => {
 .btn-action {
   display: inline-block;
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
   font-weight: 700;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-sm);
@@ -273,6 +273,6 @@ onMounted(async () => {
 
 .btn-table:hover {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
 }
 </style>

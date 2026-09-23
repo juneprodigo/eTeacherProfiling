@@ -49,8 +49,57 @@ export const useAuthStore = defineStore('auth', {
         const response = await api.get('/auth/me/')
         this.user = response.data
         localStorage.setItem('user', JSON.stringify(response.data))
+        return response.data
       } catch (err) {
         console.error('Failed to sync profile', err)
+      }
+    },
+
+    async updateProfile(payload) {
+      this.isLoading = true
+      try {
+        const headers = payload instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}
+        const response = await api.patch('/auth/me/', payload, { headers })
+        this.user = response.data
+        localStorage.setItem('user', JSON.stringify(response.data))
+        return response.data
+      } catch (err) {
+        console.error('Failed to update profile', err)
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async changePassword(oldPassword, newPassword, newPassword2) {
+      this.isLoading = true
+      try {
+        const response = await api.post('/auth/change-password/', {
+          old_password: oldPassword,
+          new_password: newPassword,
+          new_password2: newPassword2,
+        })
+        return response.data
+      } catch (err) {
+        console.error('Failed to change password', err)
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async updateUser(userId, payload) {
+      try {
+        const headers = payload instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}
+        const response = await api.patch(`/auth/users/${userId}/`, payload, { headers })
+        if (this.user?.id === userId) {
+          this.user = response.data
+          localStorage.setItem('user', JSON.stringify(response.data))
+        }
+        return response.data
+      } catch (err) {
+        console.error('Failed to update user', err)
+        throw err
       }
     },
 

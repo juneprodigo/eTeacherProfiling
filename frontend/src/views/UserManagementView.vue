@@ -37,7 +37,14 @@
               <span :class="['status-dot', u.is_active ? 'active' : 'inactive']"></span>
               {{ u.is_active ? 'Active' : 'Disabled' }}
             </td>
-            <td>
+            <td class="action-cell">
+              <button
+                @click="openEditUser(u)"
+                class="btn-edit-user"
+                title="Edit User Profile"
+              >
+                ✏️ Edit
+              </button>
               <button
                 v-if="u.id !== authStore.user?.id"
                 @click="toggleUser(u)"
@@ -106,17 +113,43 @@
         </form>
       </div>
     </div>
+
+    <!-- Edit User Profile Modal -->
+    <UserProfileModal
+      :isOpen="showEditModal"
+      :targetUser="userToEdit"
+      @close="showEditModal = false"
+      @saved="onUserUpdated"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import UserProfileModal from '@/components/UserProfileModal.vue'
 import api from '@/api'
+import notify from '@/utils/notify'
 
 const authStore = useAuthStore()
 const users = ref([])
 const showModal = ref(false)
+const showEditModal = ref(false)
+const userToEdit = ref(null)
+
+const openEditUser = async (u) => {
+  try {
+    const res = await api.get(`/auth/users/${u.id}/`)
+    userToEdit.value = res.data
+  } catch (err) {
+    userToEdit.value = { ...u }
+  }
+  showEditModal.value = true
+}
+
+const onUserUpdated = async () => {
+  await loadUsers()
+}
 
 const newUser = reactive({
   username: '',
@@ -145,18 +178,27 @@ const createUser = async () => {
       username: '', email: '', first_name: '', last_name: '',
       role: 'teacher', password: '', password2: ''
     })
+    notify.success('User account created successfully!')
     await loadUsers()
   } catch (err) {
-    alert(err.response?.data?.error || JSON.stringify(err.response?.data) || 'Failed to create user')
+    notify.error(err.response?.data?.error || JSON.stringify(err.response?.data) || 'Failed to create user')
   }
 }
 
 const toggleUser = async (u) => {
+  const willDeactivate = u.is_active
+  const confirmed = await notify.confirm({
+    title: willDeactivate ? 'Deactivate User?' : 'Activate User?',
+    text: `Are you sure you want to ${willDeactivate ? 'deactivate' : 'activate'} account for ${u.full_name}?`,
+    confirmButtonText: willDeactivate ? 'Yes, Deactivate' : 'Yes, Activate'
+  })
+  if (!confirmed) return
   try {
     await api.patch(`/auth/users/${u.id}/`, { is_active: !u.is_active })
     u.is_active = !u.is_active
+    notify.toast(`User ${u.is_active ? 'activated' : 'deactivated'} successfully.`, 'info')
   } catch (err) {
-    alert('Failed to update status')
+    notify.error('Failed to update user status.')
   }
 }
 
@@ -184,7 +226,7 @@ onMounted(loadUsers)
 
 .btn-primary {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
   font-weight: 700;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-sm);
@@ -235,6 +277,29 @@ onMounted(loadUsers)
 .status-dot.active { background: var(--accent-emerald); }
 .status-dot.inactive { background: var(--accent-rose); }
 
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-edit-user {
+  background: rgba(254, 203, 144, 0.15);
+  color: #fecb90;
+  border: 1px solid rgba(254, 203, 144, 0.35);
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit-user:hover {
+  background: rgba(254, 203, 144, 0.28);
+  border-color: #fecb90;
+}
+
 .btn-toggle {
   background: var(--bg-surface-elevated);
   color: var(--text-secondary);
@@ -242,6 +307,7 @@ onMounted(loadUsers)
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   border: 1px solid var(--border-color);
+  cursor: pointer;
 }
 
 .modal-backdrop {
@@ -297,7 +363,7 @@ onMounted(loadUsers)
 
 .btn-submit {
   background: var(--accent-gold);
-  color: #0b1329;
+  color: var(--text-on-accent, #24120a);
   font-weight: 700;
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-sm);

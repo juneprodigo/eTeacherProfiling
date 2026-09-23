@@ -48,10 +48,16 @@ class MeView(APIView):
         return Response(serializer.data)
 
     def patch(self, request):
-        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True, context={'request': request})
+        user = request.user
+        data = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
+        if not user.is_staff and user.role != 'admin':
+            data.pop('role', None)
+            data.pop('is_active', None)
+
+        serializer = UserUpdateSerializer(user, data=data, partial=True, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(UserDetailSerializer(request.user, context={'request': request}).data)
+        return Response(UserDetailSerializer(user, context={'request': request}).data)
 
 
 class ChangePasswordView(APIView):
@@ -104,6 +110,14 @@ class UserDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ('PUT', 'PATCH'):
             return UserUpdateSerializer
         return UserDetailSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(UserDetailSerializer(instance, context={'request': request}).data)
 
     def get_permissions(self):
         if self.request.method == 'DELETE':
