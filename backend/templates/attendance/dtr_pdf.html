@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Daily Time Record</title>
+<style>
+  @page {
+    size: letter portrait;
+    margin: 1cm;
+  }
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 8pt;
+    color: #111;
+  }
+  .doc-num {
+    font-size: 7pt;
+    font-style: italic;
+    color: #555;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .header h2 {
+    margin: 2px 0;
+    font-size: 13pt;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .header p {
+    margin: 0;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #333;
+  }
+  table.meta {
+    width: 100%;
+    margin-bottom: 6px;
+    font-size: 8.5pt;
+  }
+  table.dtr {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+  }
+  table.dtr th, table.dtr td {
+    border: 0.5pt solid #444;
+    text-align: center;
+    padding: 2px;
+  }
+  table.dtr th {
+    background-color: #eee;
+    font-weight: bold;
+  }
+  .weekend {
+    background-color: #f7f7f7;
+    color: #777;
+    font-style: italic;
+  }
+  .total-row {
+    background-color: #fff3cd;
+    font-weight: bold;
+  }
+  .cert {
+    font-size: 7pt;
+    font-style: italic;
+    text-align: justify;
+    margin: 8px 0;
+  }
+  table.sigs {
+    width: 100%;
+    margin-top: 15px;
+  }
+  table.sigs td {
+    text-align: center;
+    vertical-align: top;
+  }
+  .sig-name {
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top: 1pt solid #111;
+    display: inline-block;
+    padding-top: 2px;
+    min-width: 180px;
+    font-size: 8.5pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-num">Civil Service Form No. 48</div>
+
+<div class="header">
+  <h2>DAILY TIME RECORD</h2>
+  <p>DEPARTMENT OF EDUCATION — CAGAYAN EAST ELEMENTARY SCHOOL (CES)</p>
+</div>
+
+<table class="meta" cellpadding="2" cellspacing="0">
+  <tr>
+    <td width="15%"><b>Name:</b></td>
+    <td width="45%"><u><b>{{ full_name|upper }}</b></u></td>
+    <td width="18%" align="right"><b>Employee ID:</b></td>
+    <td width="22%" align="right">{{ emp_id }}</td>
+  </tr>
+  <tr>
+    <td><b>For the Month of:</b></td>
+    <td><b>{{ month_name }} 1–{{ last_day }}, {{ year }}</b></td>
+    <td align="right"><b>Position:</b></td>
+    <td align="right">{{ position }}</td>
+  </tr>
+</table>
+
+<div style="text-align: center; font-size: 7pt; font-style: italic; margin-bottom: 6px;">
+  Official hours for arrival and departure: Regular Days 8:00 AM - 12:00 PM / 1:00 PM - 5:00 PM
+</div>
+
+<table class="dtr" cellpadding="1" cellspacing="0">
+  <thead>
+    <tr>
+      <th rowspan="2" width="7%">Day</th>
+      <th colspan="2" width="28%">A. M.</th>
+      <th colspan="2" width="28%">P. M.</th>
+      <th rowspan="2" width="15%">Under / Tardy</th>
+      <th rowspan="2" width="22%">Remarks / Status</th>
+    </tr>
+    <tr>
+      <th width="14%">Arrival</th>
+      <th width="14%">Departure</th>
+      <th width="14%">Arrival</th>
+      <th width="14%">Departure</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in days_data %}
+    <tr class="{% if d.is_weekend %}weekend{% endif %}">
+      <td><b>{{ d.day }}</b></td>
+      <td>{{ d.am_in|default:"—" }}</td>
+      <td>{{ d.am_out|default:"—" }}</td>
+      <td>{{ d.pm_in|default:"—" }}</td>
+      <td>{{ d.pm_out|default:"—" }}</td>
+      <td>
+        {% if d.tardy_minutes or d.undertime_minutes %}
+          {{ d.tardy_minutes|add:d.undertime_minutes }}m
+        {% else %}
+          —
+        {% endif %}
+      </td>
+      <td align="left">
+        {% if d.is_weekend and not d.am_in and not d.pm_in %}
+          {{ d.day_name|upper }}
+        {% else %}
+          {{ d.status|default:d.remarks|default:"" }}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    <tr class="total-row">
+      <td colspan="5" align="right" style="padding-right: 6px;">
+        TOTAL DAYS PRESENT: {{ days_present }} &nbsp;|&nbsp; HOURS RENDERED: {{ total_hours }} hrs
+      </td>
+      <td>
+        {% if total_tardy or total_undertime %}
+          {{ total_tardy|add:total_undertime }}m
+        {% else %}
+          0m
+        {% endif %}
+      </td>
+      <td align="left">Verified DTR</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="cert">
+  I certify on my honor that the above is a true and correct report of the hours of work performed,
+  record of which was made daily at the time of arrival and departure from office.
+</div>
+
+<table class="sigs" cellpadding="4" cellspacing="0">
+  <tr>
+    <td width="48%">
+      <div style="height: 25px;"></div>
+      <div class="sig-name">{{ full_name|upper }}</div>
+      <div style="font-size: 7pt; color: #555;">Signature of Employee</div>
+    </td>
+    <td width="4%"></td>
+    <td width="48%">
+      <div style="height: 25px;"></div>
+      <div class="sig-name">SCHOOL HEAD / PRINCIPAL</div>
+      <div style="font-size: 7pt; color: #555;">In-Charge / Verifying Officer</div>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

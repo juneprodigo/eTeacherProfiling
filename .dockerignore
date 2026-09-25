@@ -1,0 +1,14 @@
+.git
+.gitignore
+.vscode
+*.bat
+*.xlsx
+*.pdf
+backend/__pycache__
+backend/staticfiles
+backend/media/*
+!backend/media/.gitkeep
+backend/venv
+backend/env
+frontend/node_modules
+frontend/dist

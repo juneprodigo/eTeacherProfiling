@@ -16,6 +16,7 @@ from .serializers import (
     LeaveBalanceSerializer
 )
 from pds.models import Teacher
+from .dtr_exporter import generate_dtr_excel, generate_dtr_pdf
 
 
 class DailyTimeRecordViewSet(viewsets.ModelViewSet):
@@ -302,6 +303,68 @@ class DailyTimeRecordViewSet(viewsets.ModelViewSet):
                 'total_hours_rendered': round(total_rendered_hours, 2),
             }
         })
+
+    @action(detail=False, methods=['get'])
+    def export_excel(self, request):
+        """Exports Civil Service Form No. 48 for the specified teacher and month as an Excel file."""
+        user = request.user
+        teacher_id = request.query_params.get('teacher')
+        if not teacher_id and hasattr(user, 'teacher_profile'):
+            teacher_id = user.teacher_profile.id
+
+        if not teacher_id:
+            return Response({'error': 'Teacher not specified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        teacher = Teacher.objects.filter(id=teacher_id).select_related('user').first()
+        if not teacher:
+            return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        now = datetime.date.today()
+        month = int(request.query_params.get('month', now.month))
+        year = int(request.query_params.get('year', now.year))
+
+        excel_bytes = generate_dtr_excel(teacher, year, month)
+        t_name = (teacher.user.last_name or teacher.user.username).replace(' ', '_')
+        m_name = calendar.month_name[month]
+        filename = f"CS_Form_48_{t_name}_{m_name}_{year}.xlsx"
+
+        response = HttpResponse(
+            excel_bytes,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
+    @action(detail=False, methods=['get'])
+    def export_pdf(self, request):
+        """Exports Civil Service Form No. 48 for the specified teacher and month as a PDF."""
+        user = request.user
+        teacher_id = request.query_params.get('teacher')
+        if not teacher_id and hasattr(user, 'teacher_profile'):
+            teacher_id = user.teacher_profile.id
+
+        if not teacher_id:
+            return Response({'error': 'Teacher not specified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        teacher = Teacher.objects.filter(id=teacher_id).select_related('user').first()
+        if not teacher:
+            return Response({'error': 'Teacher not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        now = datetime.date.today()
+        month = int(request.query_params.get('month', now.month))
+        year = int(request.query_params.get('year', now.year))
+
+        try:
+            pdf_bytes = generate_dtr_pdf(teacher, year, month)
+            t_name = (teacher.user.last_name or teacher.user.username).replace(' ', '_')
+            m_name = calendar.month_name[month]
+            filename = f"CS_Form_48_{t_name}_{m_name}_{year}.pdf"
+
+            response = HttpResponse(pdf_bytes, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+        except Exception as e:
+            return Response({'error': f'Failed to generate PDF: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'])
     def stats(self, request):

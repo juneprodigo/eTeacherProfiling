@@ -21,6 +21,16 @@
           </select>
         </div>
 
+        <button @click="downloadDTRExcel" class="btn-action btn-excel" :disabled="isDownloadingExcel" title="Download Official CS Form 48 as Excel (.xlsx)">
+          <span v-if="isDownloadingExcel">⏳ Exporting...</span>
+          <span v-else>📊 Download Excel</span>
+        </button>
+
+        <button @click="downloadDTRPdf" class="btn-action btn-pdf" :disabled="isDownloadingPdf" title="Download Official CS Form 48 as PDF (.pdf)">
+          <span v-if="isDownloadingPdf">⏳ Generating...</span>
+          <span v-else>📄 Download PDF</span>
+        </button>
+
         <button @click="printDTR" class="btn-action btn-print" title="Print CSC Form 48">
           🖨️ Print Form 48
         </button>
@@ -216,6 +226,14 @@
             <small>Daily Time Record</small>
           </div>
           <button @click="changeMonth(1)" class="btn-month-nav" title="Next Month">▶</button>
+          <div class="dtr-export-buttons">
+            <button @click="downloadDTRExcel" class="btn-export-small btn-excel" :disabled="isDownloadingExcel" title="Download Excel">
+              📊 Excel
+            </button>
+            <button @click="downloadDTRPdf" class="btn-export-small btn-pdf" :disabled="isDownloadingPdf" title="Download PDF">
+              📄 PDF
+            </button>
+          </div>
         </div>
 
         <!-- Monthly Totals Summary Strip -->
@@ -716,8 +734,73 @@ const getStatusClass = (statusStr) => {
   return 'default'
 }
 
+const isDownloadingExcel = ref(false)
+const isDownloadingPdf = ref(false)
+
 const printDTR = () => {
   window.print()
+}
+
+const downloadDTRExcel = async () => {
+  if (!selectedTeacherId.value) return
+  isDownloadingExcel.value = true
+  try {
+    const res = await api.get('/attendance/records/export_excel/', {
+      params: {
+        teacher: selectedTeacherId.value,
+        month: currentMonth.value,
+        year: currentYear.value,
+      },
+      responseType: 'blob',
+    })
+    const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    const teacherName = (attendanceStore.monthlyDTR?.teacher?.name || 'Faculty').replace(/\s+/g, '_')
+    link.setAttribute('download', `DTR_${teacherName}_${currentMonthName.value}_${currentYear.value}.xlsx`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+    notify.success('CS Form 48 Excel downloaded successfully!')
+  } catch (err) {
+    console.error('Failed to download DTR Excel:', err)
+    notify.error('Failed to download DTR Excel.')
+  } finally {
+    isDownloadingExcel.value = false
+  }
+}
+
+const downloadDTRPdf = async () => {
+  if (!selectedTeacherId.value) return
+  isDownloadingPdf.value = true
+  try {
+    const res = await api.get('/attendance/records/export_pdf/', {
+      params: {
+        teacher: selectedTeacherId.value,
+        month: currentMonth.value,
+        year: currentYear.value,
+      },
+      responseType: 'blob',
+    })
+    const blob = new Blob([res.data], { type: 'application/pdf' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    const teacherName = (attendanceStore.monthlyDTR?.teacher?.name || 'Faculty').replace(/\s+/g, '_')
+    link.setAttribute('download', `DTR_${teacherName}_${currentMonthName.value}_${currentYear.value}.pdf`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+    notify.success('CS Form 48 PDF downloaded successfully!')
+  } catch (err) {
+    console.error('Failed to download DTR PDF:', err)
+    notify.error('Failed to download DTR PDF.')
+  } finally {
+    isDownloadingPdf.value = false
+  }
 }
 
 // Leave application logic
@@ -855,11 +938,74 @@ const confirmReview = async () => {
   font-weight: 600;
   padding: 0.6rem 1.1rem;
   border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-print:hover {
   background: var(--accent-gold-subtle);
   border-color: var(--accent-gold);
+}
+
+.btn-excel {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-excel:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #34d399;
+  transform: translateY(-1px);
+}
+
+.btn-pdf {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #fda4af;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-pdf:hover:not(:disabled) {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: #f43f5e;
+  transform: translateY(-1px);
+}
+
+.btn-excel:disabled, .btn-pdf:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dtr-export-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.btn-export-small {
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.8rem !important;
+  border-radius: 6px !important;
 }
 
 /* Punch & Schedule Grid */
