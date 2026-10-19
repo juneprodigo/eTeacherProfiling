@@ -11,6 +11,7 @@ import TeacherAnalyticsView from '@/views/TeacherAnalyticsView.vue'
 import SchoolActivitiesView from '@/views/SchoolActivitiesView.vue'
 import AttendanceView from '@/views/AttendanceView.vue'
 import ReferenceLibrariesView from '@/views/ReferenceLibrariesView.vue'
+import VoucherPreparationView from '@/views/VoucherPreparationView.vue'
 
 const routes = [
   {
@@ -70,6 +71,12 @@ const routes = [
         name: 'ReferenceLibraries',
         component: ReferenceLibrariesView,
         meta: { title: 'PDS Reference Libraries', requiresStaff: true }
+      },
+      {
+        path: 'vouchers',
+        name: 'VoucherPreparation',
+        component: VoucherPreparationView,
+        meta: { title: 'Voucher Preparation & Procurement Forms' }
       },
       {
         path: 'users',

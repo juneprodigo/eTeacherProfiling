@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'pds',
     'activities',
     'attendance',
+    'vouchers',
 ]
 
 # ── Middleware ─────────────────────────────────────────────────────────────────
