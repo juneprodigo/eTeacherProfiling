@@ -95,6 +95,26 @@ input::placeholder, textarea::placeholder {
   color: var(--text-muted);
 }
 
+/* Date Input & Calendar Picker Controls */
+input[type="date"] {
+  position: relative;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(80%) sepia(45%) saturate(450%) hue-rotate(345deg) brightness(105%) contrast(98%);
+  opacity: 0.85;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  padding: 0.15rem;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  transform: scale(1.15);
+  opacity: 1;
+}
+
 a {
   color: var(--accent-gold);
   text-decoration: none;

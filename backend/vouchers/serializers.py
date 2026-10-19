@@ -1,19 +1,28 @@
 from rest_framework import serializers
-from .models import VoucherTransaction, VoucherItem, VoucherCanvassSupplier
+from .models import VoucherTransaction, VoucherItem, VoucherCanvassSupplier, VoucherReferenceLibrary
 from decimal import Decimal
+
+class VoucherReferenceLibrarySerializer(serializers.ModelSerializer):
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+
+    class Meta:
+        model = VoucherReferenceLibrary
+        fields = '__all__'
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
 
 class VoucherCanvassSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoucherCanvassSupplier
         fields = '__all__'
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'voucher']
 
 
 class VoucherItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoucherItem
         fields = '__all__'
-        read_only_fields = ['id', 'total_cost']
+        read_only_fields = ['id', 'voucher', 'total_cost']
 
 
 class VoucherTransactionListSerializer(serializers.ModelSerializer):

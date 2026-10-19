@@ -170,3 +170,51 @@ class VoucherCanvassSupplier(models.Model):
 
     def __str__(self):
         return f"Slot {self.supplier_slot}: {self.supplier_name}"
+
+
+class VoucherReferenceLibrary(models.Model):
+    """
+    Configurable reference libraries for dropdown lookups in Voucher Preparation forms.
+    Category choices:
+    - TRANSACTION_TYPE: Transaction Types
+    - SUPPLIER: Suppliers / Payees (with address and TIN)
+    - REQUESTED_BY: Requested By personnel
+    - APPROVED_BY: Approved By personnel
+    - ISSUED_BY: Issued By personnel
+    - RECEIVED_BY: Received By personnel
+    - MODE_OF_PROCUREMENT: Mode of Procurement
+    - DELIVERY_TERM: Delivery Term
+    - PAYMENT_TERM: Payment Term
+    """
+    CATEGORY_CHOICES = [
+        ('TRANSACTION_TYPE', 'Transaction Type'),
+        ('SUPPLIER', 'Supplier / Payee'),
+        ('REQUESTED_BY', 'Requested By'),
+        ('APPROVED_BY', 'Approved By'),
+        ('ISSUED_BY', 'Issued By'),
+        ('RECEIVED_BY', 'Received By'),
+        ('MODE_OF_PROCUREMENT', 'Mode of Procurement'),
+        ('DELIVERY_TERM', 'Delivery Term'),
+        ('PAYMENT_TERM', 'Payment Term'),
+    ]
+
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, db_index=True)
+    code = models.CharField(max_length=50, blank=True, default='')
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default='')
+    address = models.CharField(max_length=255, blank=True, default='', help_text="For Suppliers")
+    tin = models.CharField(max_length=100, blank=True, default='', help_text="For Suppliers")
+    designation = models.CharField(max_length=150, blank=True, default='', help_text="For Signatories")
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['category', 'sort_order', 'name']
+        verbose_name = 'Voucher Reference Library'
+        verbose_name_plural = 'Voucher Reference Libraries'
+
+    def __str__(self):
+        return f"[{self.get_category_display()}] {self.name}"
+

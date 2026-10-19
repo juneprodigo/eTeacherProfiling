@@ -5,11 +5,55 @@ export const useVoucherStore = defineStore('vouchers', {
   state: () => ({
     transactions: [],
     currentVoucher: null,
+    libraries: [],
     loading: false,
     error: null,
   }),
 
+  getters: {
+    librariesByCategory: (state) => (category) => {
+      return state.libraries.filter(l => l.category === category && l.is_active)
+    }
+  },
+
   actions: {
+    async fetchLibraries() {
+      try {
+        const response = await api.get('/vouchers/libraries/')
+        this.libraries = response.data.results || response.data
+      } catch (err) {
+        console.error('Failed to fetch voucher libraries:', err)
+      }
+    },
+
+    async createLibraryItem(data) {
+      try {
+        const response = await api.post('/vouchers/libraries/', data)
+        await this.fetchLibraries()
+        return response.data
+      } catch (err) {
+        throw err
+      }
+    },
+
+    async updateLibraryItem(id, data) {
+      try {
+        const response = await api.put(`/vouchers/libraries/${id}/`, data)
+        await this.fetchLibraries()
+        return response.data
+      } catch (err) {
+        throw err
+      }
+    },
+
+    async deleteLibraryItem(id) {
+      try {
+        await api.delete(`/vouchers/libraries/${id}/`)
+        await this.fetchLibraries()
+      } catch (err) {
+        throw err
+      }
+    },
     async fetchTransactions() {
       this.loading = true
       this.error = null
@@ -97,6 +141,41 @@ export const useVoucherStore = defineStore('vouchers', {
         window.URL.revokeObjectURL(link.href)
       } catch (err) {
         alert('Failed to download Excel file. Please try again.')
+      }
+    },
+
+    async downloadPdf(id, transactionCode, sheet = '') {
+      try {
+        const url = sheet
+          ? `/vouchers/transactions/${id}/export_pdf/?sheet=${encodeURIComponent(sheet)}`
+          : `/vouchers/transactions/${id}/export_pdf/`
+        const response = await api.get(url, {
+          responseType: 'blob'
+        })
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        const suffix = sheet ? `_${sheet}` : ''
+        link.download = `Voucher_${transactionCode || id}${suffix}.pdf`
+        link.click()
+        window.URL.revokeObjectURL(link.href)
+      } catch (err) {
+        alert('PDF conversion failed or is unavailable. Please try downloading as Excel (.xlsx).')
+      }
+    },
+
+    async getPdfBlobUrl(id, sheet = '') {
+      try {
+        const url = sheet
+          ? `/vouchers/transactions/${id}/export_pdf/?preview=true&sheet=${encodeURIComponent(sheet)}`
+          : `/vouchers/transactions/${id}/export_pdf/?preview=true`
+        const response = await api.get(url, {
+          responseType: 'blob'
+        })
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        return window.URL.createObjectURL(blob)
+      } catch (err) {
+        throw err
       }
     }
   }
