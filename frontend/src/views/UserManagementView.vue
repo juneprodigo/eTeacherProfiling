@@ -245,27 +245,36 @@ onMounted(loadUsers)
 .data-table th {
   text-align: left;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #475569;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f8fafc;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
 }
 
 .data-table td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid #f1f5f9;
   font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.data-table tr:hover td {
+  background: #f8fafc;
 }
 
 .role-pill {
   font-size: 0.75rem;
   padding: 0.25rem 0.6rem;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.role-pill.admin { background: rgba(244, 63, 94, 0.15); color: #fda4af; }
-.role-pill.hr { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
-.role-pill.teacher { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+.role-pill.admin { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.role-pill.hr { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.role-pill.teacher { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
 
 .status-dot {
   display: inline-block;
@@ -274,8 +283,8 @@ onMounted(loadUsers)
   border-radius: 50%;
   margin-right: 4px;
 }
-.status-dot.active { background: var(--accent-emerald); }
-.status-dot.inactive { background: var(--accent-rose); }
+.status-dot.active { background: #059669; }
+.status-dot.inactive { background: #dc2626; }
 
 .action-cell {
   display: flex;
@@ -284,20 +293,21 @@ onMounted(loadUsers)
 }
 
 .btn-edit-user {
-  background: rgba(254, 203, 144, 0.15);
-  color: #fecb90;
-  border: 1px solid rgba(254, 203, 144, 0.35);
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
   padding: 0.35rem 0.7rem;
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-edit-user:hover {
-  background: rgba(254, 203, 144, 0.28);
-  border-color: #fecb90;
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #1d4ed8;
 }
 
 .btn-toggle {

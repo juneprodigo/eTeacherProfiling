@@ -27,6 +27,7 @@ class VoucherItemSerializer(serializers.ModelSerializer):
 
 class VoucherTransactionListSerializer(serializers.ModelSerializer):
     items_count = serializers.IntegerField(source='items.count', read_only=True)
+    items = VoucherItemSerializer(many=True, read_only=True)
     transaction_type_display = serializers.CharField(source='get_transaction_type_display', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
 
@@ -36,9 +37,10 @@ class VoucherTransactionListSerializer(serializers.ModelSerializer):
             'id', 'transaction_code', 'transaction_type', 'transaction_type_display',
             'status', 'status_display', 'liquidation_code', 'liquidation_month',
             'ada_number', 'ada_date', 'ors_number', 'ors_date',
-            'payee_supplier_name', 'cheque_number', 'cheque_date',
+            'payee_supplier_name', 'payee_address', 'cheque_number', 'cheque_date',
+            'ris_date1', 'pr_date', 'po_date', 'iar_date', 'dv_date',
             'total_amount', 'dv_gross_amount', 'dv_net_amount',
-            'items_count', 'created_at', 'updated_at'
+            'items_count', 'items', 'created_at', 'updated_at'
         ]
 
 

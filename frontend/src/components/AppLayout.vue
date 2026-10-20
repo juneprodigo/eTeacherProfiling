@@ -150,8 +150,10 @@ const logout = () => {
   border-left: none;
   border-top: none;
   border-bottom: none;
+  border-right: 1px solid #e2e8f0;
   padding: 1.5rem 1rem;
-  background: rgba(26, 18, 12, 0.96);
+  background: #ffffff;
+  box-shadow: 2px 0 16px rgba(15, 23, 42, 0.03);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -162,7 +164,7 @@ const logout = () => {
   align-items: center;
   gap: 0.75rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid #e2e8f0;
   margin-bottom: 1.5rem;
 }
 
@@ -197,29 +199,30 @@ const logout = () => {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-sm);
+  color: #475569;
   font-weight: 500;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
+  font-size: 0.88rem;
+  transition: all 0.15s ease;
 }
 
 .nav-item:hover {
-  background: var(--bg-surface-elevated);
-  color: var(--text-primary);
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .nav-item.router-link-active {
-  background: linear-gradient(135deg, #fecb90, #f8b668);
-  color: #26150a;
+  background: #eff6ff;
+  color: #2563eb;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.35);
+  border-left: 3px solid #2563eb;
+  box-shadow: none;
 }
 
 .sidebar-footer {
   padding-top: 1.25rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid #e2e8f0;
 }
 
 .user-summary {
@@ -235,7 +238,7 @@ const logout = () => {
 }
 
 .user-summary:hover {
-  background: rgba(254, 203, 144, 0.08);
+  background: #f1f5f9;
 }
 
 .user-edit-hint {
@@ -298,9 +301,9 @@ const logout = () => {
 
 .btn-profile-edit {
   flex: 1;
-  background: rgba(254, 203, 144, 0.12);
-  color: #fecb90;
-  border: 1px solid rgba(254, 203, 144, 0.3);
+  background: rgba(29, 78, 216, 0.08);
+  color: #1d4ed8;
+  border: 1px solid rgba(29, 78, 216, 0.25);
   padding: 0.45rem 0.5rem;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
@@ -311,8 +314,8 @@ const logout = () => {
 }
 
 .btn-profile-edit:hover {
-  background: rgba(254, 203, 144, 0.24);
-  border-color: #fecb90;
+  background: rgba(29, 78, 216, 0.16);
+  border-color: #1d4ed8;
 }
 
 .btn-logout {

@@ -515,7 +515,7 @@ onMounted(() => {
   padding: 0.65rem 1.2rem;
   border: none;
   background: transparent;
-  color: #94a3b8;
+  color: #475569;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.88rem;
@@ -524,26 +524,27 @@ onMounted(() => {
 }
 
 .tab-btn:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.05);
+  color: #0f172a;
+  background: #f1f5f9;
 }
 
 .tab-btn.active {
-  color: #38bdf8;
-  background: rgba(14, 165, 233, 0.15);
-  border: 1px solid rgba(14, 165, 233, 0.3);
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
 }
 
 .tab-badge {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e2e8f0;
+  background: #e2e8f0;
+  color: #334155;
   font-size: 0.72rem;
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
+  font-weight: 700;
 }
 
 .tab-btn.active .tab-badge {
-  background: #0284c7;
+  background: #2563eb;
   color: #ffffff;
 }
 
@@ -555,6 +556,8 @@ onMounted(() => {
   padding: 0.85rem 1.25rem;
   border-radius: 10px;
   margin-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 
 .search-box {
@@ -563,8 +566,8 @@ onMounted(() => {
   gap: 0.5rem;
   flex: 1;
   max-width: 400px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
   padding: 0.45rem 0.85rem;
   border-radius: 6px;
 }
@@ -573,14 +576,15 @@ onMounted(() => {
   width: 100%;
   background: transparent;
   border: none;
-  color: #f8fafc;
+  color: #0f172a;
   font-size: 0.88rem;
   outline: none;
 }
 
 .filter-info {
   font-size: 0.82rem;
-  color: #94a3b8;
+  color: #64748b;
+  font-weight: 500;
 }
 
 /* Table */
@@ -588,6 +592,8 @@ onMounted(() => {
   border-radius: 12px;
   overflow: hidden;
   padding: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 
 .data-table {
@@ -602,23 +608,23 @@ onMounted(() => {
 }
 
 .data-table th {
-  background: rgba(15, 23, 42, 0.8);
-  color: #94a3b8;
+  background: #f8fafc;
+  color: #475569;
   font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .data-table td {
-  color: #e2e8f0;
+  color: #0f172a;
   font-size: 0.88rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .data-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: #f8fafc;
 }
 
 .text-right {
@@ -626,33 +632,33 @@ onMounted(() => {
 }
 
 .badge-sg {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .badge-type {
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: #faf5ff;
+  color: #7e22ce;
+  border: 1px solid #e9d5ff;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .active-badge {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .actions-cell {
@@ -662,8 +668,9 @@ onMounted(() => {
 }
 
 .btn-action {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #334155;
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
   cursor: pointer;
@@ -672,7 +679,9 @@ onMounted(() => {
 }
 
 .btn-action:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
 }
 
 .no-records {
@@ -686,7 +695,7 @@ onMounted(() => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(15, 23, 42, 0.5);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -700,6 +709,9 @@ onMounted(() => {
   max-width: 580px;
   border-radius: 12px;
   padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
 }
 
 .modal-header {
@@ -708,20 +720,25 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
   font-size: 1.2rem;
-  color: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .btn-close {
   background: transparent;
   border: none;
   font-size: 1.5rem;
-  color: #94a3b8;
+  color: #64748b;
   cursor: pointer;
+}
+
+.btn-close:hover {
+  color: #0f172a;
 }
 
 .form-group {
@@ -732,7 +749,7 @@ onMounted(() => {
   display: block;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: #475569;
   margin-bottom: 0.35rem;
 }
 
@@ -740,12 +757,18 @@ onMounted(() => {
 .form-group select {
   width: 100%;
   padding: 0.55rem 0.75rem;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  color: #f8fafc;
+  color: #0f172a;
   font-size: 0.88rem;
   outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .form-group input:focus,

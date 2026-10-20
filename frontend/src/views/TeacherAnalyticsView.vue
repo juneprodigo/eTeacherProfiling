@@ -808,7 +808,7 @@ onMounted(() => {
 .tab-controls {
   display: flex;
   gap: 0.5rem;
-  background: rgba(11, 19, 41, 0.6);
+  background: #f1f5f9;
   padding: 0.35rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
@@ -829,18 +829,19 @@ onMounted(() => {
 
 .tab-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: #ffffff;
 }
 
 .tab-btn.active {
-  background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  background: #ffffff;
+  color: #2563eb;
   font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .badge-alert {
   background: var(--accent-rose);
-  color: white;
+  color: #ffffff;
   font-size: 0.7rem;
   padding: 0.1rem 0.45rem;
   border-radius: 10px;

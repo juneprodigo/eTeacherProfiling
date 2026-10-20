@@ -407,12 +407,12 @@ const closeModal = () => {
 .modal-card {
   width: 100%;
   max-width: 680px;
-  background: rgba(26, 18, 12, 0.94);
-  border: 1px solid rgba(254, 203, 144, 0.35);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(254, 203, 144, 0.12);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
   border-radius: 14px;
   padding: 2rem;
-  color: #fff;
+  color: #0f172a;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -422,7 +422,7 @@ const closeModal = () => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(254, 203, 144, 0.15);
+  border-bottom: 1px solid #e2e8f0;
   padding-bottom: 1.25rem;
 }
 
@@ -436,15 +436,15 @@ const closeModal = () => {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #fecb90, #f8b668);
-  color: #26150a;
+  background: #eff6ff;
+  color: #2563eb;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
   font-weight: 700;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(254, 203, 144, 0.3);
+  border: 2px solid #bfdbfe;
 }
 
 .avatar-large img {
@@ -455,21 +455,21 @@ const closeModal = () => {
 
 .modal-header h3 {
   font-size: 1.35rem;
-  color: #fecb90;
+  color: #0f172a;
   margin: 0 0 0.25rem 0;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .modal-header .subtitle {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: #64748b;
   margin: 0;
 }
 
 .btn-close {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: #94a3b8;
   font-size: 1.4rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -478,7 +478,7 @@ const closeModal = () => {
 }
 
 .btn-close:hover {
-  color: #fecb90;
+  color: #0f172a;
 }
 
 /* Tabs */
@@ -502,13 +502,13 @@ const closeModal = () => {
 }
 
 .tab-btn:hover {
-  color: #fecb90;
-  background: rgba(254, 203, 144, 0.08);
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 .tab-btn.active {
-  color: #26150a;
-  background: #fecb90;
+  color: #ffffff;
+  background: #2563eb;
   font-weight: 600;
 }
 
@@ -519,8 +519,8 @@ const closeModal = () => {
   gap: 1.5rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(254, 203, 144, 0.04);
-  border: 1px dashed rgba(254, 203, 144, 0.25);
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
   border-radius: 10px;
 }
 
@@ -529,8 +529,8 @@ const closeModal = () => {
   height: 72px;
   border-radius: 50%;
   overflow: hidden;
-  background: rgba(254, 203, 144, 0.15);
-  border: 2px solid rgba(254, 203, 144, 0.4);
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -545,31 +545,31 @@ const closeModal = () => {
 .photo-placeholder {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #fecb90;
+  color: #2563eb;
 }
 
 .btn-upload {
   display: inline-block;
-  background: rgba(254, 203, 144, 0.15);
-  border: 1px solid rgba(254, 203, 144, 0.35);
-  color: #fecb90;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #2563eb;
   padding: 0.45rem 1rem;
   border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-upload:hover {
-  background: rgba(254, 203, 144, 0.28);
-  border-color: #fecb90;
+  background: #eff6ff;
+  border-color: #2563eb;
 }
 
 .hint {
   display: block;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
   margin-top: 0.3rem;
 }
 
@@ -596,21 +596,21 @@ const closeModal = () => {
 
 .field label {
   font-size: 0.82rem;
-  color: #fecb90;
-  font-weight: 500;
+  color: #475569;
+  font-weight: 600;
 }
 
 .required {
-  color: #ff6b6b;
+  color: #e11d48;
 }
 
 .field input,
 .field select {
-  background: rgba(15, 10, 7, 0.7);
-  border: 1px solid rgba(254, 203, 144, 0.25);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   padding: 0.6rem 0.8rem;
-  color: #fff;
+  color: #0f172a;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
@@ -618,13 +618,13 @@ const closeModal = () => {
 .field input:focus,
 .field select:focus {
   outline: none;
-  border-color: #fecb90;
-  box-shadow: 0 0 10px rgba(254, 203, 144, 0.25);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .input-disabled {
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: rgba(255, 255, 255, 0.45) !important;
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
   cursor: not-allowed;
 }
 
@@ -713,42 +713,43 @@ const closeModal = () => {
   gap: 0.8rem;
   margin-top: 1.75rem;
   padding-top: 1.25rem;
-  border-top: 1px solid rgba(254, 203, 144, 0.15);
+  border-top: 1px solid #e2e8f0;
 }
 
 .btn-cancel {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.7);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.2s;
 }
 
 .btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #fecb90, #f8b668);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   border: none;
-  color: #26150a;
+  color: #ffffff;
   padding: 0.6rem 1.4rem;
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(254, 203, 144, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 .btn-submit:hover:not(:disabled) {
-  opacity: 0.92;
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(254, 203, 144, 0.4);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
 .btn-submit:disabled {

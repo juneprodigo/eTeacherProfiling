@@ -23,6 +23,12 @@
         >
           <span>📚</span> Voucher Libraries
         </button>
+        <button
+          class="btn-nav report-btn"
+          @click="openSummaryReportModal"
+        >
+          <span>📊</span> Summary Reports
+        </button>
         <button v-if="currentView === 'TRANSACTIONS'" class="btn-primary" @click="openCreateModal">
           <span class="btn-icon">➕</span> New Voucher Transaction
         </button>
@@ -82,28 +88,103 @@
 
       <!-- Search & Filter Controls -->
       <div class="filter-bar glass-panel">
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search by Code, Payee, PR No., Cheque No., or Liquidation Code..."
-            class="search-input"
-          />
+        <div class="filter-top-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search by Code, Payee, PR No., Cheque No., or Liquidation Code..."
+              class="search-input"
+            />
+          </div>
+          <div class="filter-actions">
+            <select v-model="filterStatus" class="select-filter">
+              <option value="ALL">All Workflow Statuses</option>
+              <option value="DRAFT">Draft</option>
+              <option value="PENDING_CANVASS">Pending Canvass</option>
+              <option value="AWARDED">Canvass Awarded</option>
+              <option value="PO_ISSUED">PO Issued</option>
+              <option value="INSPECTED">Inspected &amp; Accepted</option>
+              <option value="VOUCHER_READY">DV Ready</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+            <div class="filter-info">
+              Showing {{ filteredTransactions.length }} of {{ store.transactions.length }} transactions
+            </div>
+          </div>
         </div>
-        <div class="filter-actions">
-          <select v-model="filterStatus" class="select-filter">
-            <option value="ALL">All Workflow Statuses</option>
-            <option value="DRAFT">Draft</option>
-            <option value="PENDING_CANVASS">Pending Canvass</option>
-            <option value="AWARDED">Canvass Awarded</option>
-            <option value="PO_ISSUED">PO Issued</option>
-            <option value="INSPECTED">Inspected &amp; Accepted</option>
-            <option value="VOUCHER_READY">DV Ready</option>
-            <option value="COMPLETED">Completed</option>
-          </select>
-          <div class="filter-info">
-            Showing {{ filteredTransactions.length }} of {{ store.transactions.length }} transactions
+
+        <!-- Date Range Filter Row -->
+        <div class="filter-date-row">
+          <div class="date-filter-group">
+            <span class="date-filter-label">📅 Filter by:</span>
+            <select v-model="dateFilterField" class="select-filter-sm">
+              <option value="created_at">Date Created</option>
+              <option value="cheque_date">Cheque Date</option>
+              <option value="ors_date">ORS Date</option>
+              <option value="po_date">PO Date</option>
+              <option value="pr_date">PR Date</option>
+              <option value="dv_date">DV Date</option>
+            </select>
+
+            <div class="date-input-wrap">
+              <label>From:</label>
+              <input v-model="dateFrom" type="date" class="date-input-sm" />
+            </div>
+
+            <div class="date-input-wrap">
+              <label>To:</label>
+              <input v-model="dateTo" type="date" class="date-input-sm" />
+            </div>
+
+            <button
+              v-if="dateFrom || dateTo"
+              class="btn-clear-date"
+              title="Clear date filter"
+              @click="clearDateFilter"
+            >
+              ✕ Clear
+            </button>
+          </div>
+
+          <!-- Quick Date Presets -->
+          <div class="date-presets">
+            <button
+              class="preset-btn"
+              :class="{ active: activeDatePreset === 'ALL' }"
+              @click="applyDatePreset('ALL')"
+            >
+              All Time
+            </button>
+            <button
+              class="preset-btn"
+              :class="{ active: activeDatePreset === 'THIS_MONTH' }"
+              @click="applyDatePreset('THIS_MONTH')"
+            >
+              This Month
+            </button>
+            <button
+              class="preset-btn"
+              :class="{ active: activeDatePreset === 'LAST_30' }"
+              @click="applyDatePreset('LAST_30')"
+            >
+              Last 30 Days
+            </button>
+            <button
+              class="preset-btn"
+              :class="{ active: activeDatePreset === 'THIS_QUARTER' }"
+              @click="applyDatePreset('THIS_QUARTER')"
+            >
+              This Qtr
+            </button>
+            <button
+              class="preset-btn"
+              :class="{ active: activeDatePreset === 'THIS_YEAR' }"
+              @click="applyDatePreset('THIS_YEAR')"
+            >
+              This Year
+            </button>
           </div>
         </div>
       </div>
@@ -1164,6 +1245,233 @@
         </div>
       </div>
     </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: SUMMARY REPORTING MODAL -->
+    <!-- ========================================================================= -->
+    <div v-if="showReportModal" class="modal-overlay" @click.self="showReportModal = false">
+      <div class="modal-fullscreen report-modal glass-panel">
+        <div class="modal-header">
+          <div class="report-header-title">
+            <div class="modal-title-row">
+              <span class="report-icon">📊</span>
+              <div>
+                <h3>Voucher Expenditure &amp; Procurement Summary Reports</h3>
+                <p class="subtitle">
+                  Real-time analytics and distribution breakdown for {{ filteredTransactions.length }} filtered transaction(s)
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="report-header-actions">
+            <button class="btn-secondary" @click="printSummaryReport">
+              🖨️ Print / Save Report
+            </button>
+            <button class="btn-close" @click="showReportModal = false">✕</button>
+          </div>
+        </div>
+
+        <!-- Report Tabs Navigation -->
+        <div class="report-tabs-bar">
+          <button
+            class="report-tab-btn"
+            :class="{ active: reportActiveTab === 'BY_TYPE' }"
+            @click="reportActiveTab = 'BY_TYPE'"
+          >
+            🏷️ Summary by Transaction Type
+          </button>
+          <button
+            class="report-tab-btn"
+            :class="{ active: reportActiveTab === 'BY_PAYEE' }"
+            @click="reportActiveTab = 'BY_PAYEE'"
+          >
+            🏢 Summary by Payee / Supplier
+          </button>
+          <button
+            class="report-tab-btn"
+            :class="{ active: reportActiveTab === 'BY_ITEM' }"
+            @click="reportActiveTab = 'BY_ITEM'"
+          >
+            📦 Summary by Items &amp; Materials
+          </button>
+        </div>
+
+        <!-- Report Content Area -->
+        <div class="modal-body report-body printable-report" id="printableReportArea">
+          <!-- Filter Scope Banner -->
+          <div class="report-scope-banner">
+            <div class="scope-item">
+              <span class="scope-lbl">Date Scope:</span>
+              <strong>{{ dateFrom || dateTo ? `${dateFrom || 'Start'} to ${dateTo || 'End'} (${dateFilterField})` : 'All Dates Recorded' }}</strong>
+            </div>
+            <div class="scope-item">
+              <span class="scope-lbl">Type Scope:</span>
+              <strong>{{ filterType === 'ALL' ? 'All Types' : filterType }}</strong>
+            </div>
+            <div class="scope-item">
+              <span class="scope-lbl">Status Scope:</span>
+              <strong>{{ filterStatus === 'ALL' ? 'All Statuses' : filterStatus }}</strong>
+            </div>
+            <div class="scope-item">
+              <span class="scope-lbl">Total Filtered Spend:</span>
+              <strong class="text-royal">₱ {{ formatMoney(summaryTotalSpend) }}</strong>
+            </div>
+          </div>
+
+          <!-- TAB 1: SUMMARY BY TRANSACTION TYPE -->
+          <div v-if="reportActiveTab === 'BY_TYPE'" class="report-section">
+            <div class="report-cards-summary">
+              <div
+                v-for="item in reportByTypeData"
+                :key="item.type"
+                class="report-stat-card"
+              >
+                <div class="stat-type-label">{{ item.label }}</div>
+                <div class="stat-amount">₱ {{ formatMoney(item.totalAmount) }}</div>
+                <div class="stat-meta">
+                  <span>{{ item.count }} Transaction(s)</span>
+                  <span>{{ item.percent.toFixed(1) }}% of Total</span>
+                </div>
+                <div class="stat-progress-bar">
+                  <div class="stat-progress-fill" :style="{ width: `${item.percent}%` }"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="report-table-box mt-4">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Transaction Type</th>
+                    <th class="text-center">Count</th>
+                    <th class="text-right">Total Amount (₱)</th>
+                    <th class="text-right">Average / Voucher (₱)</th>
+                    <th class="text-right">Share (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, idx) in reportByTypeData" :key="item.type">
+                    <td>{{ idx + 1 }}</td>
+                    <td>
+                      <span class="type-badge">{{ item.label }}</span>
+                    </td>
+                    <td class="text-center font-bold">{{ item.count }}</td>
+                    <td class="text-right font-mono font-bold">₱ {{ formatMoney(item.totalAmount) }}</td>
+                    <td class="text-right font-mono">₱ {{ formatMoney(item.count > 0 ? item.totalAmount / item.count : 0) }}</td>
+                    <td class="text-right font-bold text-royal">{{ item.percent.toFixed(1) }}%</td>
+                  </tr>
+                  <tr class="report-total-row">
+                    <td colspan="2">TOTAL</td>
+                    <td class="text-center font-bold">{{ filteredTransactions.length }}</td>
+                    <td class="text-right font-mono font-bold text-royal">₱ {{ formatMoney(summaryTotalSpend) }}</td>
+                    <td class="text-right font-mono">₱ {{ formatMoney(filteredTransactions.length ? summaryTotalSpend / filteredTransactions.length : 0) }}</td>
+                    <td class="text-right font-bold text-royal">100.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 2: SUMMARY BY PAYEE / SUPPLIER -->
+          <div v-if="reportActiveTab === 'BY_PAYEE'" class="report-section">
+            <div class="report-table-box">
+              <div class="report-box-header">
+                <h4>🏢 Payee &amp; Supplier Procurement Distribution ({{ reportByPayeeData.length }} Payees)</h4>
+              </div>
+              <div v-if="reportByPayeeData.length === 0" class="empty-state py-4">
+                <p>No payees or suppliers found for the current filtered scope.</p>
+              </div>
+              <table v-else class="report-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Payee / Supplier Name</th>
+                    <th class="text-center">Vouchers Count</th>
+                    <th class="text-right">Total Disbursed (₱)</th>
+                    <th class="text-right">Share of Total</th>
+                    <th>Spend Share Graph</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(p, idx) in reportByPayeeData" :key="p.name">
+                    <td>
+                      <span class="rank-badge" :class="{ 'top-rank': idx < 3 }">{{ idx + 1 }}</span>
+                    </td>
+                    <td>
+                      <div class="font-bold text-primary">{{ p.name }}</div>
+                      <div v-if="p.address" class="sub-info">{{ p.address }}</div>
+                    </td>
+                    <td class="text-center font-bold">{{ p.count }}</td>
+                    <td class="text-right font-mono font-bold text-royal">₱ {{ formatMoney(p.totalAmount) }}</td>
+                    <td class="text-right font-bold">{{ p.percent.toFixed(1) }}%</td>
+                    <td style="min-width: 140px;">
+                      <div class="stat-progress-bar">
+                        <div class="stat-progress-fill" :style="{ width: `${p.percent}%` }"></div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="report-total-row">
+                    <td colspan="2">TOTAL</td>
+                    <td class="text-center font-bold">{{ filteredTransactions.length }}</td>
+                    <td class="text-right font-mono font-bold text-royal">₱ {{ formatMoney(summaryTotalSpend) }}</td>
+                    <td class="text-right font-bold text-royal">100.0%</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 3: SUMMARY BY ITEMS & MATERIALS -->
+          <div v-if="reportActiveTab === 'BY_ITEM'" class="report-section">
+            <div class="report-table-box">
+              <div class="report-box-header">
+                <h4>📦 Itemized Material &amp; Supply Procurements ({{ reportByItemData.length }} Unique Items)</h4>
+              </div>
+              <div v-if="reportByItemData.length === 0" class="empty-state py-4">
+                <p>No items registered under the current filtered vouchers.</p>
+              </div>
+              <table v-else class="report-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item Description</th>
+                    <th>Unit</th>
+                    <th class="text-center">Total Qty Purchased</th>
+                    <th class="text-right">Avg Unit Cost (₱)</th>
+                    <th class="text-right">Total Expenditure (₱)</th>
+                    <th class="text-right">Spend Share</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(it, idx) in reportByItemData" :key="it.description">
+                    <td>{{ idx + 1 }}</td>
+                    <td>
+                      <span class="font-bold text-primary">{{ it.description }}</span>
+                    </td>
+                    <td>
+                      <span class="badge-count">{{ it.unit || 'unit' }}</span>
+                    </td>
+                    <td class="text-center font-bold">{{ it.totalQty }}</td>
+                    <td class="text-right font-mono">₱ {{ formatMoney(it.avgUnitCost) }}</td>
+                    <td class="text-right font-mono font-bold text-royal">₱ {{ formatMoney(it.totalCost) }}</td>
+                    <td class="text-right font-bold">{{ it.percent.toFixed(1) }}%</td>
+                  </tr>
+                  <tr class="report-total-row">
+                    <td colspan="3">TOTAL ITEMIZED EXPENDITURE</td>
+                    <td class="text-center font-bold">{{ reportItemsTotalQty }}</td>
+                    <td></td>
+                    <td class="text-right font-mono font-bold text-royal">₱ {{ formatMoney(reportItemsTotalCost) }}</td>
+                    <td class="text-right font-bold text-royal">100.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -1177,6 +1485,68 @@ const currentView = ref('TRANSACTIONS') // 'TRANSACTIONS' or 'LIBRARIES'
 const searchQuery = ref('')
 const filterType = ref('ALL')
 const filterStatus = ref('ALL')
+
+// Date Filter State
+const dateFilterField = ref('created_at')
+const dateFrom = ref('')
+const dateTo = ref('')
+const activeDatePreset = ref('ALL')
+
+const applyDatePreset = (preset) => {
+  activeDatePreset.value = preset
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth() // 0-indexed
+
+  const formatYMD = (d) => {
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
+  }
+
+  if (preset === 'ALL') {
+    dateFrom.value = ''
+    dateTo.value = ''
+  } else if (preset === 'THIS_MONTH') {
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    dateFrom.value = formatYMD(firstDay)
+    dateTo.value = formatYMD(lastDay)
+  } else if (preset === 'LAST_30') {
+    const past = new Date()
+    past.setDate(past.getDate() - 30)
+    dateFrom.value = formatYMD(past)
+    dateTo.value = formatYMD(now)
+  } else if (preset === 'THIS_QUARTER') {
+    const qQuarter = Math.floor(month / 3)
+    const firstDay = new Date(year, qQuarter * 3, 1)
+    const lastDay = new Date(year, (qQuarter + 1) * 3, 0)
+    dateFrom.value = formatYMD(firstDay)
+    dateTo.value = formatYMD(lastDay)
+  } else if (preset === 'THIS_YEAR') {
+    dateFrom.value = `${year}-01-01`
+    dateTo.value = `${year}-12-31`
+  }
+}
+
+const clearDateFilter = () => {
+  dateFrom.value = ''
+  dateTo.value = ''
+  activeDatePreset.value = 'ALL'
+}
+
+// Summary Reporting Modal State
+const showReportModal = ref(false)
+const reportActiveTab = ref('BY_TYPE') // 'BY_TYPE', 'BY_PAYEE', 'BY_ITEM'
+
+const openSummaryReportModal = () => {
+  showReportModal.value = true
+}
+
+const printSummaryReport = () => {
+  window.print()
+}
 
 // PDF Preview Modal State
 const showPdfModal = ref(false)
@@ -1431,8 +1801,141 @@ const filteredTransactions = computed(() => {
       (item.cheque_number && item.cheque_number.toLowerCase().includes(query)) ||
       (item.ors_number && item.ors_number.toLowerCase().includes(query))
 
-    return matchesType && matchesStatus && matchesSearch
+    // Date filtering
+    let matchesDate = true
+    if (dateFrom.value || dateTo.value) {
+      let rawDate = item[dateFilterField.value]
+      if (rawDate) {
+        // Date may be ISO string like '2026-10-19T03:30:00' or date format '2026-10-19'
+        const dateStr = String(rawDate).slice(0, 10)
+        if (dateFrom.value && dateStr < dateFrom.value) {
+          matchesDate = false
+        }
+        if (dateTo.value && dateStr > dateTo.value) {
+          matchesDate = false
+        }
+      } else {
+        // If the item doesn't have the chosen date field populated, exclude when filtering
+        matchesDate = false
+      }
+    }
+
+    return matchesType && matchesStatus && matchesSearch && matchesDate
   })
+})
+
+// Summary Reporting Computeds
+const summaryTotalSpend = computed(() => {
+  return filteredTransactions.value.reduce((sum, t) => sum + Number(t.total_amount || 0), 0)
+})
+
+const transactionTypeMeta = [
+  { type: 'SUPPLIES', label: 'Purchase of Supplies' },
+  { type: 'REPAIR', label: 'Repair & Maintenance' },
+  { type: 'CATERING', label: 'Catering Services' },
+  { type: 'PETTY_CASH', label: 'Petty Cash Replenishment' },
+  { type: 'TRAVEL', label: 'Travel Expenses' },
+  { type: 'UTILITIES', label: 'Electricity & Internet' },
+  { type: 'LOAD', label: 'Communication / Load' },
+]
+
+const reportByTypeData = computed(() => {
+  const total = summaryTotalSpend.value || 1
+  return transactionTypeMeta.map(meta => {
+    const list = filteredTransactions.value.filter(t => t.transaction_type === meta.type)
+    const totalAmount = list.reduce((sum, t) => sum + Number(t.total_amount || 0), 0)
+    return {
+      type: meta.type,
+      label: meta.label,
+      count: list.length,
+      totalAmount,
+      percent: summaryTotalSpend.value > 0 ? (totalAmount / total) * 100 : 0
+    }
+  }).sort((a, b) => b.totalAmount - a.totalAmount)
+})
+
+const reportByPayeeData = computed(() => {
+  const map = new Map()
+  const total = summaryTotalSpend.value || 1
+
+  filteredTransactions.value.forEach(t => {
+    const key = (t.payee_supplier_name || 'UNSPECIFIED PAYEE').trim()
+    const amt = Number(t.total_amount || 0)
+    if (!map.has(key)) {
+      map.set(key, {
+        name: key,
+        address: t.payee_address || '',
+        count: 0,
+        totalAmount: 0
+      })
+    }
+    const entry = map.get(key)
+    entry.count += 1
+    entry.totalAmount += amt
+    if (!entry.address && t.payee_address) {
+      entry.address = t.payee_address
+    }
+  })
+
+  return Array.from(map.values())
+    .map(p => ({
+      ...p,
+      percent: summaryTotalSpend.value > 0 ? (p.totalAmount / total) * 100 : 0
+    }))
+    .sort((a, b) => b.totalAmount - a.totalAmount)
+})
+
+const reportByItemData = computed(() => {
+  const map = new Map()
+
+  filteredTransactions.value.forEach(t => {
+    (t.items || []).forEach(it => {
+      const desc = (it.item_description || 'General Item').trim()
+      const qty = Number(it.quantity || 0)
+      const cost = Number(it.unit_cost_1 || 0)
+      const itemTotal = qty * cost
+
+      if (!map.has(desc)) {
+        map.set(desc, {
+          description: desc,
+          unit: it.unit || 'unit',
+          totalQty: 0,
+          totalCost: 0,
+          unitCosts: []
+        })
+      }
+      const entry = map.get(desc)
+      entry.totalQty += qty
+      entry.totalCost += itemTotal
+      if (cost > 0) entry.unitCosts.push(cost)
+      if (it.unit && entry.unit === 'unit') entry.unit = it.unit
+    })
+  })
+
+  const itemsArr = Array.from(map.values())
+  const totalAllItemsCost = itemsArr.reduce((sum, i) => sum + i.totalCost, 0) || 1
+
+  return itemsArr.map(i => {
+    const avg = i.unitCosts.length > 0
+      ? i.unitCosts.reduce((a, b) => a + b, 0) / i.unitCosts.length
+      : (i.totalQty > 0 ? i.totalCost / i.totalQty : 0)
+    return {
+      description: i.description,
+      unit: i.unit,
+      totalQty: i.totalQty,
+      avgUnitCost: avg,
+      totalCost: i.totalCost,
+      percent: totalAllItemsCost > 0 ? (i.totalCost / totalAllItemsCost) * 100 : 0
+    }
+  }).sort((a, b) => b.totalCost - a.totalCost)
+})
+
+const reportItemsTotalQty = computed(() => {
+  return reportByItemData.value.reduce((sum, i) => sum + i.totalQty, 0)
+})
+
+const reportItemsTotalCost = computed(() => {
+  return reportByItemData.value.reduce((sum, i) => sum + i.totalCost, 0)
 })
 
 const computedGrossAmount = computed(() => {
@@ -1984,21 +2487,21 @@ const triggerDatePicker = (event) => {
 }
 
 .btn-nav:hover {
-  background: rgba(254, 203, 144, 0.15);
+  background: rgba(29, 78, 216, 0.08);
   color: var(--accent-gold);
 }
 
 .btn-nav.active {
   background: var(--accent-gold);
-  color: var(--text-on-accent, #26150a);
+  color: #ffffff;
   border-color: var(--accent-gold);
-  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.35);
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #fecb90, #f8b668);
-  color: #26150a;
-  border: 1px solid #fecb90;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+  border: 1px solid #1d4ed8;
   padding: 0.6rem 1.2rem;
   border-radius: var(--radius-sm);
   font-weight: 700;
@@ -2008,16 +2511,17 @@ const triggerDatePicker = (event) => {
   align-items: center;
   gap: 0.4rem;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(254, 203, 144, 0.3);
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.25);
 }
 
 .btn-primary:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(254, 203, 144, 0.4);
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.35);
 }
 
 .btn-secondary {
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   padding: 0.6rem 1.1rem;
@@ -2025,11 +2529,13 @@ const triggerDatePicker = (event) => {
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: rgba(254, 203, 144, 0.15);
-  color: var(--text-primary);
+  background: var(--bg-surface-elevated);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
 /* Flowchart Stage Summary Pills */
@@ -2039,12 +2545,14 @@ const triggerDatePicker = (event) => {
   gap: 0.75rem;
   padding: 0.85rem 1rem;
   border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
 }
 
 .flow-step {
   padding: 0.65rem 0.5rem;
   border-radius: var(--radius-sm);
-  background: rgba(24, 17, 11, 0.6);
+  background: var(--bg-surface-elevated);
   border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2053,14 +2561,14 @@ const triggerDatePicker = (event) => {
 
 .flow-step:hover {
   border-color: var(--accent-gold);
-  background: rgba(254, 203, 144, 0.1);
+  background: rgba(29, 78, 216, 0.05);
   transform: translateY(-2px);
 }
 
 .flow-step.active {
   border-color: var(--accent-gold);
-  background: rgba(254, 203, 144, 0.2);
-  box-shadow: 0 4px 12px rgba(254, 203, 144, 0.25);
+  background: rgba(29, 78, 216, 0.1);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);
 }
 
 .flow-num {
@@ -2089,12 +2597,21 @@ const triggerDatePicker = (event) => {
 /* Filter Bar */
 .filter-bar {
   display: flex;
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  gap: 0.85rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.filter-top-row {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.85rem 1.25rem;
-  border-radius: var(--radius-md);
   flex-wrap: wrap;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .search-box {
@@ -2103,10 +2620,16 @@ const triggerDatePicker = (event) => {
   gap: 0.5rem;
   flex: 1;
   max-width: 480px;
-  background: rgba(24, 17, 11, 0.75);
+  background: var(--bg-surface-elevated);
   border: 1px solid var(--border-color);
   padding: 0.45rem 0.85rem;
   border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
 }
 
 .search-input {
@@ -2128,6 +2651,15 @@ const triggerDatePicker = (event) => {
   width: auto;
   min-width: 180px;
   padding: 0.45rem 0.75rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.select-filter:focus {
+  border-color: var(--accent-gold);
 }
 
 .filter-info {
@@ -2135,11 +2667,121 @@ const triggerDatePicker = (event) => {
   color: var(--text-muted);
 }
 
+/* Date Filter Controls */
+.filter-date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color);
+  width: 100%;
+}
+
+.date-filter-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.date-filter-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.select-filter-sm {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.select-filter-sm:focus {
+  border-color: var(--accent-gold);
+}
+
+.date-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.date-input-sm {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.date-input-sm:focus {
+  border-color: var(--accent-gold);
+}
+
+.btn-clear-date {
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.25);
+  color: var(--accent-rose);
+  padding: 0.32rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-clear-date:hover {
+  background: var(--accent-rose);
+  color: #ffffff;
+}
+
+.date-presets {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-btn:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.preset-btn.active {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: #ffffff;
+}
+
 /* Table Wrapper */
 .content-table-wrapper {
   border-radius: var(--radius-md);
   overflow: hidden;
   padding: 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
 }
 
 .table-responsive {
@@ -2160,8 +2802,8 @@ const triggerDatePicker = (event) => {
 }
 
 .data-table th {
-  background: rgba(36, 26, 18, 0.9);
-  color: var(--accent-gold);
+  background: #f1f5f9;
+  color: #1e3a8a;
   font-weight: 700;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -2169,7 +2811,7 @@ const triggerDatePicker = (event) => {
 }
 
 .table-row:hover {
-  background: rgba(254, 203, 144, 0.04);
+  background: rgba(29, 78, 216, 0.03);
 }
 
 .code-highlight {
@@ -2187,48 +2829,56 @@ const triggerDatePicker = (event) => {
 }
 
 .type-badge {
-  background: rgba(254, 203, 144, 0.18);
-  color: var(--accent-gold);
-  border: 1px solid rgba(254, 203, 144, 0.3);
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
 }
 
 .status-badge {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
 }
 
 .status-badge.draft {
-  background: rgba(191, 161, 137, 0.2);
-  color: var(--text-muted);
-  border-color: rgba(191, 161, 137, 0.3);
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+  font-weight: 700;
 }
 
 .active-badge {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
 }
 
 .inactive-badge {
-  background: rgba(244, 63, 94, 0.2);
-  color: #fda4af;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  font-weight: 700;
 }
 
 .amount-cell {
   font-family: monospace;
   font-size: 0.95rem;
   white-space: nowrap;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .net-due {
-  color: #34d399;
+  color: #059669;
+  font-weight: 800;
 }
 
 .sub-info {
   font-size: 0.82rem;
-  color: var(--text-secondary);
+  color: #475569;
 }
 
 .badge-count {
@@ -2256,18 +2906,18 @@ const triggerDatePicker = (event) => {
 }
 
 .btn-action:hover {
-  background: rgba(254, 203, 144, 0.2);
+  background: rgba(29, 78, 216, 0.1);
   border-color: var(--accent-gold);
   transform: translateY(-1px);
 }
 
 .btn-action.export:hover {
-  background: rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.15);
   border-color: #10b981;
 }
 
 .btn-action.delete:hover {
-  background: rgba(244, 63, 94, 0.25);
+  background: rgba(225, 29, 72, 0.15);
   border-color: var(--accent-rose);
 }
 
@@ -2303,7 +2953,7 @@ const triggerDatePicker = (event) => {
 
 .tab-btn.active {
   background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  color: #ffffff;
   font-weight: 700;
 }
 
@@ -2315,15 +2965,15 @@ const triggerDatePicker = (event) => {
 }
 
 .tab-btn.active .tab-badge {
-  background: #24120a;
-  color: var(--accent-gold);
+  background: #172554;
+  color: #ffffff;
 }
 
 /* Fullscreen / Large Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: var(--glass-backdrop);
   display: flex;
   align-items: center;
@@ -2339,14 +2989,19 @@ const triggerDatePicker = (event) => {
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
   overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
 }
 
 .modal-medium {
   width: 550px;
   max-width: 95vw;
   border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
 }
 
 .modal-header {
@@ -2355,6 +3010,7 @@ const triggerDatePicker = (event) => {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
 }
 
 .modal-subtitle {
@@ -2369,6 +3025,7 @@ const triggerDatePicker = (event) => {
   color: var(--text-muted);
   font-size: 1.35rem;
   cursor: pointer;
+  transition: color 0.15s ease;
 }
 
 .btn-close:hover {
@@ -2385,6 +3042,8 @@ const triggerDatePicker = (event) => {
   border-left: none;
   border-right: none;
   scrollbar-width: thin;
+  background: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .nav-tab {
@@ -2403,13 +3062,13 @@ const triggerDatePicker = (event) => {
 }
 
 .nav-tab:hover {
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface);
   color: var(--text-primary);
 }
 
 .nav-tab.active {
   background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  color: #ffffff;
   font-weight: 700;
 }
 
@@ -2421,8 +3080,8 @@ const triggerDatePicker = (event) => {
 }
 
 .nav-tab.active .tab-index {
-  background: var(--text-on-accent, #24120a);
-  color: var(--accent-gold);
+  background: #172554;
+  color: #ffffff;
 }
 
 /* Modal Body & Sections */
@@ -2728,8 +3387,8 @@ const triggerDatePicker = (event) => {
 /* VALIDATION & ERROR HIGHLIGHTING STYLES */
 /* ========================================================================= */
 .validation-banner {
-  background: rgba(244, 63, 94, 0.12);
-  border: 1.5px solid rgba(244, 63, 94, 0.55);
+  background: #fff1f2;
+  border: 1.5px solid #fecdd3;
   border-radius: var(--radius-md);
   padding: 0.9rem 1.25rem;
   margin: 0.75rem 1.5rem 0.25rem 1.5rem;
@@ -2753,11 +3412,11 @@ const triggerDatePicker = (event) => {
 .banner-content {
   flex: 1;
   font-size: 0.88rem;
-  color: #fecdd3;
+  color: #9f1239;
 }
 
 .banner-content strong {
-  color: #fff1f2;
+  color: #881337;
   font-weight: 700;
   display: block;
   margin-bottom: 0.35rem;
@@ -2772,19 +3431,20 @@ const triggerDatePicker = (event) => {
 }
 
 .error-link {
-  color: #fda4af;
+  color: #be123c;
   cursor: pointer;
   text-decoration: underline;
+  font-weight: 600;
   transition: color 0.15s ease;
 }
 
 .error-link:hover {
-  color: #ffffff;
+  color: #4c0519;
 }
 
 .tab-jump-hint {
   font-size: 0.78rem;
-  color: #fca5a5;
+  color: #64748b;
   font-weight: 600;
   margin-left: 0.35rem;
 }
@@ -2792,7 +3452,7 @@ const triggerDatePicker = (event) => {
 .btn-clear-errors {
   background: transparent;
   border: none;
-  color: #fda4af;
+  color: #be123c;
   font-size: 1.1rem;
   cursor: pointer;
   padding: 0.2rem 0.5rem;
@@ -2801,18 +3461,19 @@ const triggerDatePicker = (event) => {
 }
 
 .btn-clear-errors:hover {
-  background: rgba(244, 63, 94, 0.25);
-  color: #ffffff;
+  background: #ffe4e6;
+  color: #881337;
 }
 
 /* Tab Error Indicator */
 .nav-tab.has-tab-error {
-  border-bottom: 2px solid #f43f5e !important;
-  color: #fda4af;
+  border-bottom: 2px solid #e11d48 !important;
+  color: #be123c;
+  font-weight: 700;
 }
 
 .tab-error-dot {
-  background: #f43f5e;
+  background: #e11d48;
   color: #ffffff;
   font-size: 0.72rem;
   font-weight: 800;
@@ -2823,14 +3484,14 @@ const triggerDatePicker = (event) => {
   align-items: center;
   justify-content: center;
   margin-left: 0.35rem;
-  box-shadow: 0 0 8px rgba(244, 63, 94, 0.8);
+  box-shadow: 0 0 8px rgba(225, 29, 72, 0.4);
   animation: pulse 1.6s infinite ease-in-out;
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(244, 63, 94, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.5); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(225, 29, 72, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
 }
 
 /* Invalid Input Highlighting */
@@ -2838,23 +3499,24 @@ const triggerDatePicker = (event) => {
 input.input-invalid,
 select.input-invalid,
 textarea.input-invalid {
-  border-color: #f43f5e !important;
-  box-shadow: 0 0 0 2.5px rgba(244, 63, 94, 0.35) !important;
-  background-color: rgba(244, 63, 94, 0.08) !important;
-  color: #fff1f2 !important;
+  border-color: #e11d48 !important;
+  box-shadow: 0 0 0 2.5px rgba(225, 29, 72, 0.2) !important;
+  background-color: #fff1f2 !important;
+  color: #0f172a !important;
 }
 
 .input-invalid:focus,
 input.input-invalid:focus,
 select.input-invalid:focus,
 textarea.input-invalid:focus {
-  border-color: #fb7185 !important;
-  box-shadow: 0 0 0 3.5px rgba(244, 63, 94, 0.5) !important;
+  border-color: #be123c !important;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.3) !important;
   outline: none;
 }
 
 .field-has-error label {
-  color: #fda4af !important;
+  color: #be123c !important;
+  font-weight: 700;
 }
 
 .req-star {
@@ -2865,9 +3527,9 @@ textarea.input-invalid:focus {
 .error-inline-msg {
   display: block;
   font-size: 0.75rem;
-  color: #fda4af;
+  color: #be123c;
   margin-top: 0.25rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ========================================================================= */
@@ -2910,5 +3572,252 @@ textarea.input-invalid:focus {
 .date-picker-control:hover .calendar-icon-btn {
   transform: translateY(-50%) scale(1.1);
   opacity: 1;
+}
+
+/* ========================================================================= */
+/* SUMMARY REPORTING MODAL & PRINT STYLES */
+/* ========================================================================= */
+.report-modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+}
+
+.report-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.report-icon {
+  font-size: 1.8rem;
+  background: rgba(29, 78, 216, 0.1);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.report-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.report-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.report-tab-btn:hover {
+  background: var(--bg-surface);
+  color: var(--accent-gold);
+}
+
+.report-tab-btn.active {
+  background: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2);
+}
+
+.report-body {
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+  background: #f8fafc;
+}
+
+.report-scope-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.scope-item {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scope-lbl {
+  color: var(--text-muted);
+}
+
+.text-royal {
+  color: var(--accent-gold) !important;
+}
+
+.report-cards-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.report-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease;
+}
+
+.report-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-gold);
+}
+
+.stat-type-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-amount {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0.4rem 0;
+  font-family: monospace;
+}
+
+.stat-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.stat-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stat-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.report-table-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.report-box-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface-elevated);
+}
+
+.report-box-header h4 {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  padding: 0.85rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.88rem;
+}
+
+.report-table th {
+  background: #f1f5f9;
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.report-table tbody tr:hover {
+  background: rgba(29, 78, 216, 0.02);
+}
+
+.report-total-row {
+  background: #f8fafc;
+  font-weight: 800;
+  border-top: 2px solid #cbd5e1;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.rank-badge.top-rank {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printableReportArea, #printableReportArea * {
+    visibility: visible;
+  }
+  #printableReportArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    background: #ffffff !important;
+  }
 }
 </style>

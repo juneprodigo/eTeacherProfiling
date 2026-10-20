@@ -173,17 +173,19 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(19, 31, 61, 0.9), rgba(26, 41, 80, 0.95));
-  border-left: 4px solid var(--accent-gold);
+  background: linear-gradient(135deg, #eff6ff, #f8fafc);
+  border: 1px solid #bfdbfe;
+  border-left: 5px solid var(--accent-gold);
 }
 
 .banner-text h2 {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
+  color: #0f172a;
 }
 
 .banner-text p {
-  color: var(--text-secondary);
+  color: #475569;
   max-width: 650px;
   font-size: 0.9rem;
   margin-bottom: 1.25rem;
@@ -192,19 +194,25 @@ onMounted(async () => {
 .btn-action {
   display: inline-block;
   background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  color: #ffffff;
   font-weight: 700;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-sm);
 }
 
+.btn-action:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
 .banner-graphic {
   font-size: 5rem;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .recent-section {
   padding: 1.5rem;
+  background: #ffffff;
 }
 
 .section-head {
@@ -217,6 +225,7 @@ onMounted(async () => {
 .view-all {
   font-size: 0.85rem;
   font-weight: 600;
+  color: #2563eb;
 }
 
 .simple-table {
@@ -227,21 +236,32 @@ onMounted(async () => {
 .simple-table th {
   text-align: left;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #475569;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f8fafc;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color);
 }
 
 .simple-table td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid #f1f5f9;
   font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.simple-table tr:hover td {
+  background: #f8fafc;
 }
 
 .name-cell {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  color: #0f172a;
+  font-weight: 600;
 }
 
 .badge-status {
@@ -249,30 +269,34 @@ onMounted(async () => {
   font-size: 0.75rem;
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .badge-status.complete {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
 }
 
 .badge-status.pending {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fcd34d;
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
 }
 
 .btn-table {
   font-size: 0.8rem;
-  background: var(--bg-surface-elevated);
+  background: #f8fafc;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-sm);
-  color: var(--text-primary);
+  color: #1e293b;
+  font-weight: 600;
   border: 1px solid var(--border-color);
 }
 
 .btn-table:hover {
-  background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 </style>

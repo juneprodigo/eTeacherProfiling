@@ -228,7 +228,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(11, 19, 41, 0.6);
+  background: #ffffff;
   border: 1px solid var(--border-color);
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-sm);
@@ -240,6 +240,7 @@ onMounted(async () => {
   border: none;
   background: transparent;
   padding: 0.5rem 0;
+  color: var(--text-primary);
 }
 .search-box input:focus {
   box-shadow: none;
@@ -257,7 +258,7 @@ onMounted(async () => {
 
 .btn-create {
   background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  color: #ffffff;
   font-weight: 700;
   padding: 0.65rem 1rem;
   border-radius: var(--radius-sm);
@@ -266,6 +267,7 @@ onMounted(async () => {
 .table-card {
   padding: 0.5rem;
   overflow-x: auto;
+  background: #ffffff;
 }
 
 .data-table {
@@ -276,15 +278,24 @@ onMounted(async () => {
 .data-table th {
   text-align: left;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #475569;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f8fafc;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
 }
 
 .data-table td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid #f1f5f9;
   font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.data-table tr:hover td {
+  background: #f8fafc;
 }
 
 .name-cell {
@@ -296,19 +307,24 @@ onMounted(async () => {
 .avatar-sm {
   width: 36px;
   height: 36px;
-  background: var(--bg-surface-elevated);
+  background: #eff6ff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   color: var(--accent-gold);
-  border: 1px solid var(--border-color);
+  border: 1px solid #bfdbfe;
+}
+
+.name-details strong {
+  color: #0f172a;
+  font-weight: 600;
 }
 
 .name-details small {
   display: block;
-  color: var(--text-muted);
+  color: #64748b;
   font-size: 0.75rem;
 }
 
@@ -317,17 +333,19 @@ onMounted(async () => {
   font-size: 0.75rem;
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .badge-status.complete {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
 }
 
 .badge-status.pending {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fcd34d;
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
 }
 
 .action-buttons {
@@ -336,52 +354,57 @@ onMounted(async () => {
 }
 
 .btn-pds {
-  background: var(--bg-surface-elevated);
-  color: var(--text-primary);
+  background: #ffffff;
+  color: #1e293b;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
+  font-weight: 600;
   border: 1px solid var(--border-color);
 }
 
 .btn-pds:hover {
-  background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 
 .btn-pdf {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
   padding: 0.35rem 0.65rem;
   border-radius: var(--radius-sm);
   font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .btn-pdf:hover {
-  background: var(--accent-blue);
-  color: white;
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .btn-preview {
-  background: var(--accent-gold-subtle);
-  color: var(--accent-gold);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  font-weight: 600;
 }
 
 .btn-preview:hover {
-  background: var(--accent-gold);
-  color: var(--text-on-accent, #24120a);
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .btn-excel {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-weight: 600;
 }
 
 .btn-excel:hover {
-  background: #10b981;
+  background: #059669;
   color: #ffffff;
 }
 
