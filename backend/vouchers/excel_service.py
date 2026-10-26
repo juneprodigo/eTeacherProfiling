@@ -4,7 +4,11 @@ from decimal import Decimal
 from django.conf import settings
 import os
 
-TEMPLATE_PATH = os.path.join(settings.BASE_DIR, '..', 'frontend', 'src', 'assets', 'BLANK.xlsx')
+TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'BLANK.xlsx')
+if not os.path.exists(TEMPLATE_PATH):
+    alt = os.path.join(settings.BASE_DIR, '..', 'frontend', 'src', 'assets', 'BLANK.xlsx')
+    if os.path.exists(alt):
+        TEMPLATE_PATH = alt
 
 def generate_voucher_workbook(voucher):
     """

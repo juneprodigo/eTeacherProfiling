@@ -5,7 +5,11 @@ import openpyxl
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from django.conf import settings
 
-TEMPLATE_PATH = os.path.join(settings.BASE_DIR.parent, 'CS Form No. 212 Revised 2026 Personal Data Sheet PDS.xlsx')
+TEMPLATE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'PDS_TEMPLATE.xlsx')
+if not os.path.exists(TEMPLATE_PATH):
+    alt_root = os.path.join(settings.BASE_DIR.parent, 'CS Form No. 212 Revised 2026 Personal Data Sheet PDS.xlsx')
+    if os.path.exists(alt_root):
+        TEMPLATE_PATH = alt_root
 
 
 class PDSExcelExporter:

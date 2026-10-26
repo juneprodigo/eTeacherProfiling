@@ -23,7 +23,7 @@ The containerized stack runs three orchestrated services managed via Docker Comp
      - Auto-seeds reference libraries (Trainings, Voluntary Work, Experience, Civil Service Eligibility).
      - Auto-seeds standard faculty shift settings.
      - Collects static files (`manage.py collectstatic`).
-   - Equipped with native PDF generation libraries (`xhtml2pdf`, `weasyprint`, `pango`, `cairo`) and Excel exporters (`openpyxl`).
+   - Equipped with native PDF generation and document conversion engines (`libreoffice-calc-nogui`, `xhtml2pdf`, `weasyprint`, `pango`, `cairo`) and Excel exporters (`openpyxl`).
 
 3. **`db` (PostgreSQL 16 Alpine)**
    - Production PostgreSQL database with automated health checks and persistent volume storage.

@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     shared-mime-info \
     fonts-dejavu-core \
+    libreoffice-calc-nogui \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
