@@ -226,6 +226,15 @@ def generate_voucher_workbook(voucher):
             if item.unit_cost_3 > 0:
                 ws[f'G{r}'] = float(item.quantity * item.unit_cost_3)
 
+    # Ensure primary sheet 'DV' is active and all sheets open scrolled to A1
+    if 'DV' in wb.sheetnames:
+        wb.active = wb['DV']
+    for sheet in wb.worksheets:
+        try:
+            sheet.sheet_view.topLeftCell = 'A1'
+        except Exception:
+            pass
+
     return wb
 
 

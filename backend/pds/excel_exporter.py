@@ -45,6 +45,13 @@ class PDSExcelExporter:
         self._populate_c2()
         self._populate_c3()
         self._populate_c4()
+        if 'C1' in self.wb.sheetnames:
+            self.wb.active = self.wb['C1']
+        for sheet in self.wb.worksheets:
+            try:
+                sheet.sheet_view.topLeftCell = 'A1'
+            except Exception:
+                pass
         return self.wb
 
     def save_to_stream(self):

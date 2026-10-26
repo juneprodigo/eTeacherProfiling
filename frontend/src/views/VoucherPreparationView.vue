@@ -1596,7 +1596,20 @@ const loadPdfForCurrentSheet = async () => {
     pdfCache.value.set(cacheKey, url)
     pdfUrl.value = url
   } catch (err) {
-    pdfError.value = 'PDF generation is currently compiling or Microsoft Excel COM service is processing. You can also download the filled Excel document.'
+    let msg = 'PDF generation is currently compiling or Microsoft Excel COM service is processing. You can also download the filled Excel document.'
+    if (err.response?.data instanceof Blob) {
+      try {
+        const text = await err.response.data.text()
+        const parsed = JSON.parse(text)
+        if (parsed.detail) msg = parsed.detail
+        else if (parsed.error) msg = parsed.error
+      } catch (_) {}
+    } else if (err.response?.data?.detail) {
+      msg = err.response.data.detail
+    } else if (err.response?.data?.error) {
+      msg = err.response.data.error
+    }
+    pdfError.value = msg
   } finally {
     pdfLoading.value = false
   }
