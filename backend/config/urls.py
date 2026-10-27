@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/activities/', include('activities.urls')),
     path('api/attendance/', include('attendance.urls')),
     path('api/vouchers/', include('vouchers.urls')),
+    path('api/nosi/', include('nosi.urls')),
     path('api/', include('pds.urls')),
 ]
 

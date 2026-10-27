@@ -51,6 +51,11 @@
           <span>Voucher Preparation</span>
         </router-link>
 
+        <router-link to="/nosi" class="nav-item">
+          <span class="icon">📜</span>
+          <span>Service Records & NOSI/NOSA</span>
+        </router-link>
+
         <router-link v-if="authStore.isAdmin" to="/users" class="nav-item">
           <span class="icon">🛡️</span>
           <span>User & Roles</span>

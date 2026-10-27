@@ -12,6 +12,7 @@ import SchoolActivitiesView from '@/views/SchoolActivitiesView.vue'
 import AttendanceView from '@/views/AttendanceView.vue'
 import ReferenceLibrariesView from '@/views/ReferenceLibrariesView.vue'
 import VoucherPreparationView from '@/views/VoucherPreparationView.vue'
+import NosiManagementView from '@/views/NosiManagementView.vue'
 
 const routes = [
   {
@@ -77,6 +78,12 @@ const routes = [
         name: 'VoucherPreparation',
         component: VoucherPreparationView,
         meta: { title: 'Voucher Preparation & Procurement Forms' }
+      },
+      {
+        path: 'nosi',
+        name: 'NosiManagement',
+        component: NosiManagementView,
+        meta: { title: 'Service Records, NOSI, NOSA & Appointments' }
       },
       {
         path: 'users',

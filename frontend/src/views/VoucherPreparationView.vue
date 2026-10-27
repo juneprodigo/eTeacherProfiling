@@ -265,8 +265,43 @@
                     📥 Excel
                   </button>
                   <button
+                    class="btn-action sheet-shortcut po-btn"
+                    title="PO Sheet (Appendix 61) CRUD & Review"
+                    @click="openEditModal(item.id, 'PO')"
+                  >
+                    📦 PO
+                  </button>
+                  <button
+                    class="btn-action sheet-shortcut ris-btn"
+                    title="RIS Sheet (Appendix 63) CRUD & Review"
+                    @click="openEditModal(item.id, 'RIS')"
+                  >
+                    📝 RIS
+                  </button>
+                  <button
+                    class="btn-action sheet-shortcut pr-btn"
+                    title="PR-A&m Sheet (Appendix 60) CRUD & Review"
+                    @click="openEditModal(item.id, 'PR')"
+                  >
+                    📋 PR
+                  </button>
+                  <button
+                    class="btn-action sheet-shortcut aoq-btn"
+                    title="AOQ Sheet (Abstract of Quotation) CRUD & Review"
+                    @click="openEditModal(item.id, 'ITEMS')"
+                  >
+                    ⚖️ AOQ
+                  </button>
+                  <button
+                    class="btn-action sheet-shortcut iar-btn"
+                    title="IAR Sheet (Appendix 62) CRUD & Review"
+                    @click="openEditModal(item.id, 'IAR')"
+                  >
+                    🔍 IAR
+                  </button>
+                  <button
                     class="btn-action edit"
-                    title="Edit and Review All Forms"
+                    title="Edit and Review Full Transaction"
                     @click="openEditModal(item.id)"
                   >
                     ✏️
@@ -426,7 +461,7 @@
             @click="currentTab = 'ITEMS'"
           >
             <span class="tab-index">2</span>
-            <span>Items &amp; Canvass (1, 2, 3)</span>
+            <span>Items &amp; AOQ (Abstract of Quotation)</span>
             <span v-if="hasTabErrors('ITEMS')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
           <button
@@ -435,7 +470,7 @@
             @click="currentTab = 'RIS'"
           >
             <span class="tab-index">3</span>
-            <span>RIS (Appendix 63)</span>
+            <span>RIS (Sheet 'RIS' / App. 63)</span>
             <span v-if="hasTabErrors('RIS')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
           <button
@@ -444,7 +479,7 @@
             @click="currentTab = 'PR'"
           >
             <span class="tab-index">4</span>
-            <span>PR (Appendix 60)</span>
+            <span>PR (Sheet 'PR-A&m' / App. 60)</span>
             <span v-if="hasTabErrors('PR')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
           <button
@@ -453,7 +488,7 @@
             @click="currentTab = 'PO'"
           >
             <span class="tab-index">5</span>
-            <span>PO (Appendix 61)</span>
+            <span>PO (Sheet 'PO' / App. 61)</span>
             <span v-if="hasTabErrors('PO')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
           <button
@@ -462,7 +497,7 @@
             @click="currentTab = 'IAR'"
           >
             <span class="tab-index">6</span>
-            <span>IAR (Appendix 62)</span>
+            <span>IAR (Sheet 'IAR' / App. 62)</span>
             <span v-if="hasTabErrors('IAR')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
           <button
@@ -471,7 +506,7 @@
             @click="currentTab = 'DV'"
           >
             <span class="tab-index">7</span>
-            <span>Disbursement Voucher (DV)</span>
+            <span>DV (Sheet 'DV')</span>
             <span v-if="hasTabErrors('DV')" class="tab-error-dot" title="Missing required fields">!</span>
           </button>
         </div>
@@ -834,6 +869,81 @@
                 <input v-model="form.ris_received_by" type="text" class="mt-1" placeholder="Or type name" />
               </div>
             </div>
+
+            <!-- RIS Items Table (Appendix 63 • Sheet 'RIS') -->
+            <div class="table-header-action mt-4">
+              <div>
+                <h4 class="sub-heading mb-0">Requisition and Issue Slip Items (Sheet 'RIS' • Appendix 63)</h4>
+                <p class="section-sub">Items requisitioned and stock availability. Changes are synchronized across PR, PO, and AOQ.</p>
+              </div>
+              <button type="button" class="btn-primary btn-sm" @click="addItemRow">
+                <span class="btn-icon">➕</span> Add Item to RIS
+              </button>
+            </div>
+
+            <div class="table-responsive mt-2">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th width="80">Stock No.</th>
+                    <th width="100">Unit</th>
+                    <th>Item Description</th>
+                    <th width="110">Qty Requested</th>
+                    <th width="110">Stock Available?</th>
+                    <th width="110">Qty Issued</th>
+                    <th width="45"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in form.items" :key="index">
+                    <td>
+                      <input v-model="item.item_code" type="text" placeholder="1" class="table-input font-mono" />
+                    </td>
+                    <td>
+                      <input v-model="item.unit" type="text" placeholder="pcs" class="table-input" />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.description"
+                        type="text"
+                        placeholder="Item description *"
+                        class="table-input"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_desc_${index}`) }"
+                        @input="clearFieldError(`item_desc_${index}`)"
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.quantity"
+                        type="number"
+                        step="any"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_qty_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_qty_${index}`)"
+                      />
+                    </td>
+                    <td class="text-center font-bold text-success">
+                      ✓ Yes
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.quantity"
+                        type="number"
+                        step="any"
+                        class="table-input font-mono"
+                      />
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action delete" title="Remove Item" @click="removeItemRow(index)">✕</button>
+                    </td>
+                  </tr>
+                  <tr v-if="!form.items.length">
+                    <td colspan="7" class="no-records">No items in RIS. Click "+ Add Item to RIS" above.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <!-- TAB 4: Purchase Request (PR - Appendix 60) -->
@@ -841,7 +951,7 @@
             <div class="section-title-row">
               <div>
                 <h3>Appendix 60: Purchase Request (PR)</h3>
-                <p class="section-sub">Standard DepEd Purchase Request Appendix 60</p>
+                <p class="section-sub">Standard DepEd Purchase Request Appendix 60 (Sheet 'PR-A&amp;m' in BLANK.xlsx)</p>
               </div>
               <span class="sheet-indicator">PR-A&amp;m</span>
             </div>
@@ -888,6 +998,92 @@
                 <input v-model="form.pr_approved_by" type="text" class="mt-1" />
               </div>
             </div>
+
+            <!-- PR Items Entry Table (Appendix 60 • Sheet 'PR-A&m') -->
+            <div class="table-header-action mt-4">
+              <div>
+                <h4 class="sub-heading mb-0">Purchase Request Items (Sheet 'PR-A&amp;m' • Appendix 60)</h4>
+                <p class="section-sub">Enter stock property number, unit, description, quantity, and estimated cost. Linked directly to BLANK.xlsx PR-A&amp;m.</p>
+              </div>
+              <button type="button" class="btn-primary btn-sm" @click="addItemRow">
+                <span class="btn-icon">➕</span> Add Item to PR
+              </button>
+            </div>
+
+            <div class="table-responsive mt-2">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th width="60">Item #</th>
+                    <th width="120">Stock / Prop No.</th>
+                    <th width="90">Unit</th>
+                    <th>Item Description</th>
+                    <th width="100">Quantity</th>
+                    <th width="130">Estimated Cost (₱)</th>
+                    <th width="140">Total Cost (₱)</th>
+                    <th width="45"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in form.items" :key="index">
+                    <td class="font-bold text-muted">{{ index + 1 }}</td>
+                    <td>
+                      <input v-model="item.item_code" type="text" placeholder="1" class="table-input font-mono" />
+                    </td>
+                    <td>
+                      <input v-model="item.unit" type="text" placeholder="pcs" class="table-input" />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.description"
+                        type="text"
+                        placeholder="Item description *"
+                        class="table-input"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_desc_${index}`) }"
+                        @input="clearFieldError(`item_desc_${index}`)"
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.quantity"
+                        type="number"
+                        step="any"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_qty_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_qty_${index}`)"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.unit_cost_1"
+                        type="number"
+                        step="0.01"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_cost_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_cost_${index}`)"
+                      />
+                    </td>
+                    <td class="amount-cell font-mono font-bold">
+                      ₱{{ formatMoney(item.quantity * item.unit_cost_1) }}
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action delete" title="Remove Item" @click="removeItemRow(index)">✕</button>
+                    </td>
+                  </tr>
+                  <tr v-if="!form.items.length">
+                    <td colspan="8" class="no-records">No items in Purchase Request. Click "+ Add Item to PR" above.</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="6" class="text-right font-bold">Total Estimated Cost (PR-A&amp;m):</td>
+                    <td class="amount-cell font-bold net-due">₱{{ formatMoney(computedGrossAmount) }}</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
 
           <!-- TAB 5: Purchase Order (PO - Appendix 61) -->
@@ -895,7 +1091,7 @@
             <div class="section-title-row">
               <div>
                 <h3>Appendix 61: Purchase Order (PO)</h3>
-                <p class="section-sub">Procurement Terms and Conditions</p>
+                <p class="section-sub">Procurement Terms and Conditions (Sheet 'PO' in BLANK.xlsx)</p>
               </div>
               <span class="sheet-indicator">PO</span>
             </div>
@@ -951,6 +1147,90 @@
                 <input v-model="form.po_payment_term" type="text" class="mt-1" />
               </div>
             </div>
+
+            <!-- PO Items Entry Table (Appendix 61 • Sheet 'PO') -->
+            <div class="table-header-action mt-4">
+              <div>
+                <h4 class="sub-heading mb-0">Purchase Order Ordered Items (Sheet 'PO' • Appendix 61)</h4>
+                <p class="section-sub">Furnish items, quantities, agreed unit price, and total amount. Linked to winning supplier {{ form.payee_supplier_name || 'Awardee' }}.</p>
+              </div>
+              <button type="button" class="btn-primary btn-sm" @click="addItemRow">
+                <span class="btn-icon">➕</span> Add Item to PO
+              </button>
+            </div>
+
+            <div class="table-responsive mt-2">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th width="80">Stock No.</th>
+                    <th width="90">Unit</th>
+                    <th>Description</th>
+                    <th width="100">Quantity</th>
+                    <th width="130">Unit Cost (₱)</th>
+                    <th width="140">Amount (₱)</th>
+                    <th width="45"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in form.items" :key="index">
+                    <td>
+                      <input v-model="item.item_code" type="text" placeholder="1" class="table-input font-mono" />
+                    </td>
+                    <td>
+                      <input v-model="item.unit" type="text" placeholder="pcs" class="table-input" />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.description"
+                        type="text"
+                        placeholder="Item description *"
+                        class="table-input"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_desc_${index}`) }"
+                        @input="clearFieldError(`item_desc_${index}`)"
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.quantity"
+                        type="number"
+                        step="any"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_qty_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_qty_${index}`)"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.unit_cost_1"
+                        type="number"
+                        step="0.01"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_cost_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_cost_${index}`)"
+                      />
+                    </td>
+                    <td class="amount-cell font-mono font-bold">
+                      ₱{{ formatMoney(item.quantity * item.unit_cost_1) }}
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action delete" title="Remove Item" @click="removeItemRow(index)">✕</button>
+                    </td>
+                  </tr>
+                  <tr v-if="!form.items.length">
+                    <td colspan="7" class="no-records">No items in Purchase Order. Click "+ Add Item to PO" above.</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="5" class="text-right font-bold">Total Purchase Order Amount (PO):</td>
+                    <td class="amount-cell font-bold net-due">₱{{ formatMoney(computedGrossAmount) }}</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
 
           <!-- TAB 6: Inspection & Acceptance Report (IAR - Appendix 62) -->
@@ -958,7 +1238,7 @@
             <div class="section-title-row">
               <div>
                 <h3>Appendix 62: Inspection &amp; Acceptance Report (IAR)</h3>
-                <p class="section-sub">Inspection verification and Property Custodian acceptance</p>
+                <p class="section-sub">Inspection verification and Property Custodian acceptance (Sheet 'IAR' in BLANK.xlsx)</p>
               </div>
               <span class="sheet-indicator">IAR</span>
             </div>
@@ -1010,6 +1290,72 @@
                 </select>
                 <input v-model="form.iar_property_custodian" type="text" class="mt-1" />
               </div>
+            </div>
+
+            <!-- IAR Items Table (Appendix 62 • Sheet 'IAR') -->
+            <div class="table-header-action mt-4">
+              <div>
+                <h4 class="sub-heading mb-0">Inspected &amp; Accepted Items (Sheet 'IAR' • Appendix 62)</h4>
+                <p class="section-sub">Verification of delivered articles received per PO and Invoice. Linked directly to BLANK.xlsx IAR.</p>
+              </div>
+              <button type="button" class="btn-primary btn-sm" @click="addItemRow">
+                <span class="btn-icon">➕</span> Add Item
+              </button>
+            </div>
+
+            <div class="table-responsive mt-2">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th width="120">Stock / Prop No.</th>
+                    <th>Description</th>
+                    <th width="90">Unit</th>
+                    <th width="110">Quantity</th>
+                    <th width="160">Inspection Status</th>
+                    <th width="45"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in form.items" :key="index">
+                    <td>
+                      <input v-model="item.item_code" type="text" placeholder="1" class="table-input font-mono" />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.description"
+                        type="text"
+                        placeholder="Item description *"
+                        class="table-input"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_desc_${index}`) }"
+                        @input="clearFieldError(`item_desc_${index}`)"
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input v-model="item.unit" type="text" placeholder="pcs" class="table-input" />
+                    </td>
+                    <td>
+                      <input
+                        v-model.number="item.quantity"
+                        type="number"
+                        step="any"
+                        class="table-input font-mono"
+                        :class="{ 'input-invalid': isFieldInvalid(`item_qty_${index}`) }"
+                        @input="recalcItemTotal(item); clearFieldError(`item_qty_${index}`)"
+                      />
+                    </td>
+                    <td>
+                      <span class="badge status-badge">✓ Accepted &amp; Verified</span>
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action delete" title="Remove Item" @click="removeItemRow(index)">✕</button>
+                    </td>
+                  </tr>
+                  <tr v-if="!form.items.length">
+                    <td colspan="6" class="no-records">No items recorded for inspection. Click "+ Add Item" above.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -1657,7 +2003,11 @@ const invalidLibFieldKeys = ref(new Set())
 
 const isFieldInvalid = (key) => invalidFieldKeys.value.has(key)
 const isLibFieldInvalid = (key) => invalidLibFieldKeys.value.has(key)
-const hasTabErrors = (tabKey) => validationErrors.value.some(err => err.tab === tabKey)
+const hasTabErrors = (tabKey) => validationErrors.value.some(err => {
+  if (err.tab === tabKey) return true
+  if (err.tab === 'ITEMS' && (tabKey === 'PR' || tabKey === 'PO' || tabKey === 'RIS')) return true
+  return false
+})
 
 const clearFieldError = (key) => {
   if (invalidFieldKeys.value.has(key)) {
@@ -1989,9 +2339,11 @@ const recalcItemTotal = (item) => {
 }
 
 const addItemRow = () => {
+  if (!form.value.items) form.value.items = []
+  const nextNum = form.value.items.length + 1
   form.value.items.push({
-    item_number: form.value.items.length + 1,
-    item_code: '',
+    item_number: nextNum,
+    item_code: String(nextNum),
     classification: 'Office Supplies',
     unit: 'pcs',
     description: '',
@@ -2089,11 +2441,11 @@ const openCreateModal = () => {
   showModal.value = true
 }
 
-const openEditModal = async (id) => {
+const openEditModal = async (id, targetTab = 'GENERAL') => {
   try {
     const data = await store.fetchVoucher(id)
     isEditing.value = true
-    currentTab.value = 'GENERAL'
+    currentTab.value = targetTab
 
     const sup2 = (data.canvass_suppliers || []).find(s => s.supplier_slot === 2)
     const sup3 = (data.canvass_suppliers || []).find(s => s.supplier_slot === 3)
@@ -2918,6 +3270,63 @@ const triggerDatePicker = (event) => {
   transition: all 0.2s;
 }
 
+.sheet-shortcut {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.28rem 0.48rem;
+  border-radius: var(--radius-sm);
+}
+
+.po-btn {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.po-btn:hover {
+  background: #dbeafe;
+}
+
+.ris-btn {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.ris-btn:hover {
+  background: #dcfce7;
+}
+
+.pr-btn {
+  background: #fefce8;
+  border-color: #fef08a;
+  color: #a16207;
+}
+
+.pr-btn:hover {
+  background: #fef9c3;
+}
+
+.aoq-btn {
+  background: #faf5ff;
+  border-color: #e9d5ff;
+  color: #7e22ce;
+}
+
+.aoq-btn:hover {
+  background: #f3e8ff;
+}
+
+.iar-btn {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+}
+
+.iar-btn:hover {
+  background: #ffedd5;
+}
+
 .btn-action:hover {
   background: rgba(29, 78, 216, 0.1);
   border-color: var(--accent-gold);
@@ -3167,6 +3576,18 @@ const triggerDatePicker = (event) => {
   width: 100%;
   padding: 0.4rem 0.5rem;
   font-size: 0.85rem;
+}
+
+.table-header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--border-color);
 }
 
 /* DV Calculation Box */

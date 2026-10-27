@@ -91,7 +91,7 @@ def generate_voucher_workbook(voucher):
         start_row = 9
         for i, item in enumerate(items[:20]):
             r = start_row + i
-            ws[f'A{r}'] = i + 1
+            ws[f'A{r}'] = item.item_code if item.item_code else (i + 1)
             ws[f'B{r}'] = item.unit
             ws[f'C{r}'] = item.description
             ws[f'D{r}'] = float(item.quantity)
@@ -115,7 +115,7 @@ def generate_voucher_workbook(voucher):
         start_row = 11
         for i, item in enumerate(items[:18]):
             r = start_row + i
-            ws[f'A{r}'] = i + 1
+            ws[f'A{r}'] = item.item_code if item.item_code else (i + 1)
             ws[f'B{r}'] = i + 1
             ws[f'C{r}'] = item.unit
             ws[f'D{r}'] = item.description
@@ -167,7 +167,7 @@ def generate_voucher_workbook(voucher):
         start_row = 19
         for i, item in enumerate(items[:20]):
             r = start_row + i
-            ws[f'A{r}'] = i + 1
+            ws[f'A{r}'] = item.item_code if item.item_code else (i + 1)
             ws[f'B{r}'] = item.unit
             ws[f'C{r}'] = item.description
             ws[f'D{r}'] = float(item.quantity)
@@ -206,7 +206,7 @@ def generate_voucher_workbook(voucher):
         start_row = 13
         for i, item in enumerate(items[:20]):
             r = start_row + i
-            ws[f'A{r}'] = i + 1
+            ws[f'A{r}'] = item.item_code if item.item_code else (i + 1)
             ws[f'B{r}'] = item.description
             ws[f'C{r}'] = item.unit
             ws[f'D{r}'] = float(item.quantity)
@@ -216,6 +216,15 @@ def generate_voucher_workbook(voucher):
         ws = wb['AOQ']
         if winner_name:
             ws['C30'] = winner_name
+        # Supplier Bidders Headers (E9: Canvass 1, F9: Canvass 2, G9: Canvass 3)
+        if sup1 and sup1.supplier_name:
+            ws['E9'] = sup1.supplier_name
+        elif winner_name:
+            ws['E9'] = winner_name
+        if sup2 and sup2.supplier_name:
+            ws['F9'] = sup2.supplier_name
+        if sup3 and sup3.supplier_name:
+            ws['G9'] = sup3.supplier_name
 
         start_row = 10
         for i, item in enumerate(items[:18]):
@@ -301,7 +310,7 @@ def build_voucher_cells(voucher):
         ris['H35'] = voucher.ris_received_by
     for i, it in enumerate(items[:20]):
         r = 9 + i
-        ris[f'A{r}'] = i + 1
+        ris[f'A{r}'] = it.item_code if it.item_code else (i + 1)
         ris[f'B{r}'] = it.unit
         ris[f'C{r}'] = it.description
         ris[f'D{r}'] = float(it.quantity)
@@ -323,7 +332,7 @@ def build_voucher_cells(voucher):
         pr['E35'] = voucher.pr_approved_by
     for i, it in enumerate(items[:18]):
         r = 11 + i
-        pr[f'A{r}'] = i + 1
+        pr[f'A{r}'] = it.item_code if it.item_code else (i + 1)
         pr[f'B{r}'] = i + 1
         pr[f'C{r}'] = it.unit
         pr[f'D{r}'] = it.description
@@ -371,7 +380,7 @@ def build_voucher_cells(voucher):
         po['D17'] = f"Payment Term:   {voucher.po_payment_term}"
     for i, it in enumerate(items[:20]):
         r = 19 + i
-        po[f'A{r}'] = i + 1
+        po[f'A{r}'] = it.item_code if it.item_code else (i + 1)
         po[f'B{r}'] = it.unit
         po[f'C{r}'] = it.description
         po[f'D{r}'] = float(it.quantity)
@@ -406,7 +415,7 @@ def build_voucher_cells(voucher):
         iar['C46'] = voucher.iar_property_custodian
     for i, it in enumerate(items[:20]):
         r = 13 + i
-        iar[f'A{r}'] = i + 1
+        iar[f'A{r}'] = it.item_code if it.item_code else (i + 1)
         iar[f'B{r}'] = it.description
         iar[f'C{r}'] = it.unit
         iar[f'D{r}'] = float(it.quantity)
@@ -416,6 +425,14 @@ def build_voucher_cells(voucher):
     aoq = {}
     if winner_name:
         aoq['C30'] = winner_name
+    if sup1 and sup1.supplier_name:
+        aoq['E9'] = sup1.supplier_name
+    elif winner_name:
+        aoq['E9'] = winner_name
+    if sup2 and sup2.supplier_name:
+        aoq['F9'] = sup2.supplier_name
+    if sup3 and sup3.supplier_name:
+        aoq['G9'] = sup3.supplier_name
     for i, it in enumerate(items[:18]):
         r = 10 + i
         aoq[f'A{r}'] = i + 1
